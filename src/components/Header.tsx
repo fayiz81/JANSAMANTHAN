@@ -1,15 +1,5 @@
 import React from 'react';
-import { 
-  FileText, 
-  Search, 
-  Building2, 
-  ShieldAlert, 
-  BarChart3, 
-  Sparkles,
-  PhoneCall,
-  Languages,
-  CheckCircle2
-} from 'lucide-react';
+import { AshokaEmblem } from './AshokaEmblem';
 
 interface HeaderProps {
   activeTab: 'submit' | 'track' | 'live' | 'grounding' | 'officer' | 'forensics' | 'analytics';
@@ -18,6 +8,8 @@ interface HeaderProps {
   setLang: (lang: 'en' | 'hi') => void;
   pendingCount: number;
   criticalCount: number;
+  fontScale: 'normal' | 'large' | 'larger';
+  setFontScale: (scale: 'normal' | 'large' | 'larger') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -26,202 +18,250 @@ export const Header: React.FC<HeaderProps> = ({
   lang,
   setLang,
   pendingCount,
-  criticalCount
+  criticalCount,
+  fontScale,
+  setFontScale
 }) => {
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-      {/* Top Gazette / Citizen Ribbon */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4 sm:px-6">
+    <header className="bg-white border-b border-slate-300 sticky top-0 z-40 shadow-xs font-sans">
+      {/* 1. Indian National Flag Tricolor Ribbon */}
+      <div className="h-1.5 w-full flex">
+        <div className="h-full w-1/3 bg-[#FF9933]"></div>
+        <div className="h-full w-1/3 bg-[#FFFFFF] border-y border-slate-200"></div>
+        <div className="h-full w-1/3 bg-[#138808]"></div>
+      </div>
+
+      {/* 2. Top Government Gazette & Accessibility Utility Bar */}
+      <div className="bg-[#1B2A4A] text-slate-200 text-xs py-1.5 px-4 sm:px-6 border-b border-[#0E1A34]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          {/* Left: Official Authority Notice */}
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 font-medium text-slate-200">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              {lang === 'en' ? 'GOVERNMENT OF INDIA' : 'भारत सरकार'} • {lang === 'en' ? 'CENTRAL RTI & GRIEVANCE DIRECTORY' : 'केंद्रीय आरटीआई एवं लोक शिकायत पोर्टल'}
+            <span className="font-semibold text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+              {lang === 'en' ? 'GOVERNMENT OF INDIA' : 'भारत सरकार'}
             </span>
-            <span className="hidden md:inline text-slate-500">|</span>
-            <span className="hidden md:inline text-slate-400">
-              {lang === 'en' ? 'Right to Information Act, 2005 (Sec 6 & 7 Compliant)' : 'सूचना का अधिकार अधिनियम, 2005'}
+            <span className="hidden md:inline text-slate-400">|</span>
+            <span className="hidden md:inline text-slate-300">
+              {lang === 'en' 
+                ? 'Ministry of Personnel, Public Grievances & Pensions (DARPG)' 
+                : 'कार्मिक, लोक शिकायत और पेंशन मंत्रालय (प्रशासनिक सुधार)'}
+            </span>
+            <span className="hidden lg:inline text-slate-500">•</span>
+            <span className="hidden lg:inline text-slate-400 text-[11px]">
+              RTI Act 2005 (Sec 6 & 7 Mandate)
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-xs">
-            <a 
-              href="tel:1905" 
-              className="flex items-center gap-1 text-amber-300 hover:text-amber-200 transition-colors"
-            >
-              <PhoneCall className="w-3.5 h-3.5" />
-              <span>{lang === 'en' ? 'National Helpline: 1905' : 'राष्ट्रीय हेल्पलाइन: 1905'}</span>
-            </a>
+          {/* Right: Accessibility Controls & Language Toggle */}
+          <div className="flex items-center gap-3 text-xs">
+            {/* National Helpline */}
+            <div className="hidden sm:flex items-center gap-1 text-amber-200 font-medium">
+              <span>{lang === 'en' ? 'Toll-Free Helpline:' : 'टोल-फ्री हेल्पलाइन:'}</span>
+              <a href="tel:1905" className="font-bold underline hover:text-white">1905</a>
+            </div>
 
+            <span className="text-slate-500 hidden sm:inline">|</span>
+
+            {/* Font Resize Accessibility (Standard Gov Practice A- / A / A+) */}
+            <div className="flex items-center border border-slate-600 rounded bg-[#0f1d38] overflow-hidden" title="Accessibility Font Size Controls">
+              <button
+                type="button"
+                onClick={() => setFontScale('normal')}
+                className={`px-1.5 py-0.5 text-[11px] font-bold cursor-pointer transition-colors ${
+                  fontScale === 'normal' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
+                }`}
+                title="Default Font Size (A)"
+              >
+                A
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontScale('large')}
+                className={`px-1.5 py-0.5 text-xs font-bold border-l border-slate-600 cursor-pointer transition-colors ${
+                  fontScale === 'large' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
+                }`}
+                title="Large Font Size (A+)"
+              >
+                A+
+              </button>
+              <button
+                type="button"
+                onClick={() => setFontScale('larger')}
+                className={`px-1.5 py-0.5 text-xs font-bold border-l border-slate-600 cursor-pointer transition-colors ${
+                  fontScale === 'larger' ? 'bg-amber-500 text-slate-950 font-black' : 'text-slate-300 hover:text-white'
+                }`}
+                title="Extra Large Font Size (A++)"
+              >
+                A++
+              </button>
+            </div>
+
+            <span className="text-slate-500">|</span>
+
+            {/* Language Switcher */}
             <button
+              type="button"
               onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
-              className="flex items-center gap-1 text-slate-200 bg-slate-800 hover:bg-slate-700 px-2 py-0.5 rounded border border-slate-700 transition-colors cursor-pointer"
-              title="Toggle Language"
+              className="bg-white/10 hover:bg-white/20 text-white font-semibold px-2 py-0.5 rounded text-[11px] border border-white/20 transition-colors cursor-pointer"
+              title="Change Language / भाषा बदलें"
             >
-              <Languages className="w-3.5 h-3.5 text-blue-400" />
-              <span>{lang === 'en' ? 'हिंदी (Hindi)' : 'English'}</span>
+              {lang === 'en' ? 'हिन्दी (Hindi)' : 'English'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Brand & Emblem Row */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          {/* Official Emblem Icon */}
-          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-amber-600 via-orange-600 to-amber-700 p-0.5 shadow-sm flex items-center justify-center shrink-0">
-            <div className="w-full h-full bg-slate-900 rounded-[7px] flex items-center justify-center text-amber-400">
-              <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <circle cx="12" cy="12" r="3" fill="currentColor" fillOpacity="0.4"/>
-              </svg>
+      {/* 3. Official Government Portal Masthead / Branding */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* National Emblem & Ministry Names */}
+          <div className="flex items-center gap-3.5">
+            <AshokaEmblem className="h-16 w-auto shrink-0 drop-shadow-xs" size={62} />
+            <div className="border-l border-slate-300 pl-3.5 py-0.5">
+              <div className="text-[#0B3C5D] font-bold text-xs uppercase tracking-wider font-serif">
+                {lang === 'en' ? 'Government of India' : 'भारत सरकार'}
+              </div>
+              <div className="text-slate-700 font-semibold text-xs leading-snug">
+                {lang === 'en' 
+                  ? 'Ministry of Personnel, Public Grievances & Pensions' 
+                  : 'कार्मिक, लोक शिकायत और पेंशन मंत्रालय'}
+              </div>
+              <div className="text-slate-500 text-[11px]">
+                {lang === 'en'
+                  ? 'Department of Administrative Reforms and Public Grievances (DARPG)'
+                  : 'प्रशासनिक सुधार और लोक शिकायत विभाग'}
+              </div>
             </div>
           </div>
 
-          <div>
+          {/* Portal Title & Statutory Recognition */}
+          <div className="flex flex-col md:items-end justify-center">
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 font-serif-gov">
-                {lang === 'en' ? 'JanSamadhan AI' : 'जनसमाधान एआई'}
-              </h1>
-              <span className="bg-blue-100 text-blue-800 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-blue-200 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-blue-600" />
-                RTI Auto-Responder
+              <span className="bg-[#0B3C5D] text-white font-extrabold text-sm px-2 py-0.5 rounded tracking-wide">
+                CPGRAMS
               </span>
+              <h1 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                {lang === 'en' 
+                  ? 'JanSamadhan National Redressal Portal' 
+                  : 'जनसमाधान राष्ट्रीय शिकायत निवारण पोर्टल'}
+              </h1>
             </div>
-            <p className="text-xs text-slate-600">
-              {lang === 'en'
-                ? 'Ministry of Personnel, Public Grievances & Pensions • AI Civic Dispatch & Forensic Registry'
-                : 'कार्मिक, लोक शिकायत और पेंशन मंत्रालय • एआई नागरिक प्रेषण एवं फॉरेंसिक रजिस्ट्री'}
-            </p>
-          </div>
-        </div>
-
-        {/* Quick Badges */}
-        <div className="hidden lg:flex items-center gap-3 text-xs">
-          <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <div>
-              <div className="font-semibold text-slate-800">Auto-PIO Routing</div>
-              <div className="text-slate-500 text-[10px]">Sec 6(1) Direct Dispatch</div>
-            </div>
-          </div>
-
-          <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-            <div>
-              <div className="font-semibold text-amber-900">Visual Forensics</div>
-              <div className="text-amber-700 text-[10px]">Anti-Tamper & Duplicate AI</div>
+            <div className="text-[11px] text-slate-600 font-medium mt-0.5 flex flex-wrap items-center gap-2">
+              <span>Centralized Public Grievance Redress and Monitoring System</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-[#138808] font-semibold">NIC GIGW Compliant</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Primary Navigation Tabs */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <nav className="flex space-x-1 sm:space-x-2 overflow-x-auto py-1 scrollbar-none" aria-label="Tabs">
-          <button
-            onClick={() => setActiveTab('submit')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'submit'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <FileText className="w-4 h-4" />
-            <span>{lang === 'en' ? 'Lodge Grievance' : 'शिकायत दर्ज करें'}</span>
-          </button>
+      {/* 4. Official Government Blue Navigation Bar */}
+      <div className="bg-[#0B3C5D] text-white">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6">
+          <nav className="flex space-x-0.5 overflow-x-auto scrollbar-none py-0" aria-label="Portal Navigation">
+            {/* Tab 1: Lodge Grievance */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('submit')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 ${
+                activeTab === 'submit'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              {lang === 'en' ? 'Lodge Grievance' : 'शिकायत दर्ज करें'}
+            </button>
 
-          <button
-            onClick={() => setActiveTab('track')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'track'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Search className="w-4 h-4" />
-            <span>{lang === 'en' ? 'Track Status & RTI Notice' : 'स्थिति एवं आरटीआई सूचना'}</span>
-          </button>
+            {/* Tab 2: Track Status */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('track')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 ${
+                activeTab === 'track'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              {lang === 'en' ? 'Track Grievance / RTI' : 'स्थिति जांचें / आरटीआई'}
+            </button>
 
-          <button
-            onClick={() => setActiveTab('live')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'live'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>{lang === 'en' ? 'Live Govt Issues Feed' : 'लाइव सरकारी फ़ीड'}</span>
-            <span className="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-emerald-300">
-              Active
-            </span>
-          </button>
+            {/* Tab 3: Live Govt Redressal Stream */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('live')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${
+                activeTab === 'live'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span>{lang === 'en' ? 'Live Govt Stream (CPGRAMS)' : 'लाइव सरकारी फ़ीड'}</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('grounding')}
-            className={`flex items-center gap-1.5 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'grounding'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>{lang === 'en' ? 'Maps & Search Grounding' : 'मैप्स व सर्च ग्राउंडिंग'}</span>
-            <span className="bg-blue-100 text-blue-800 text-[9px] font-bold px-1.5 py-0.2 rounded-full border border-blue-200">
-              AI
-            </span>
-          </button>
+            {/* Tab 4: Geographical Jurisdiction */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('grounding')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 ${
+                activeTab === 'grounding'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              {lang === 'en' ? 'Jurisdiction & Works' : 'अधिकार क्षेत्र व कार्य'}
+            </button>
 
-          <button
-            onClick={() => setActiveTab('officer')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap relative ${
-              activeTab === 'officer'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Building2 className="w-4 h-4" />
-            <span>{lang === 'en' ? 'Department Desk (CPIO)' : 'विभागीय डेस्क (सीपीआईओ)'}</span>
-            {pendingCount > 0 && (
-              <span className="ml-1 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
-                {pendingCount}
-              </span>
-            )}
-            {criticalCount > 0 && (
-              <span className="bg-rose-600 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full animate-pulse">
-                {criticalCount}
-              </span>
-            )}
-          </button>
+            {/* Tab 5: Department Desk */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('officer')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${
+                activeTab === 'officer'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              <span>{lang === 'en' ? 'Department Desk (CPIO)' : 'विभागीय डेस्क (सीपीआईओ)'}</span>
+              {pendingCount > 0 && (
+                <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded">
+                  {pendingCount}
+                </span>
+              )}
+              {criticalCount > 0 && (
+                <span className="bg-red-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded">
+                  {criticalCount}
+                </span>
+              )}
+            </button>
 
-          <button
-            onClick={() => setActiveTab('forensics')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'forensics'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4 text-amber-500" />
-            <span>{lang === 'en' ? 'AI Forensics & Duplicates' : 'फॉरेंसिक व डुप्लिकेट लैब'}</span>
-          </button>
+            {/* Tab 6: Digital Evidence & Audit */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('forensics')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 ${
+                activeTab === 'forensics'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              {lang === 'en' ? 'Evidence Verification Wing' : 'डिजिटल साक्ष्य सत्यापन'}
+            </button>
 
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`flex items-center gap-2 py-2.5 px-3.5 text-xs sm:text-sm font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'analytics'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" />
-            <span>{lang === 'en' ? 'SLA & Transparency' : 'पारदर्शिता आंकड़े'}</span>
-          </button>
-        </nav>
+            {/* Tab 7: SLA & Citizen Charter */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('analytics')}
+              className={`py-3 px-4 text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 ${
+                activeTab === 'analytics'
+                  ? 'border-[#FF9933] bg-[#082D46] text-amber-300 font-bold'
+                  : 'border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white'
+              }`}
+            >
+              {lang === 'en' ? 'Citizen Charter & SLA' : 'नागरिक अधिकार पत्र'}
+            </button>
+          </nav>
+        </div>
       </div>
     </header>
   );

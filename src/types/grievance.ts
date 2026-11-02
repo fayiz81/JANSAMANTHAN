@@ -111,6 +111,14 @@ export interface GovernmentDispatchInfo {
   dispatchedAt: string;
   nodalMinistry: string;
   transmissionStatus: GovTransmissionStatus;
+  portalSourceUrl?: string; // Direct URL to government portal
+  portalHost?: string; // e.g. "pgportal.gov.in" | "rtionline.gov.in" | "mcdonline.nic.in"
+  isLiveSyncedFromGov?: boolean;
+  liveSyncTimestamp?: string;
+  govCitations?: {
+    title: string;
+    uri: string;
+  }[];
   fieldTeamAssigned?: {
     engineerName: string;
     designation: string;
@@ -159,4 +167,6 @@ export interface GrievanceRecord {
   governmentDispatch: GovernmentDispatchInfo;
   officerNotes?: string;
   parentGrievanceId?: string;
+  isLiveGovFeedItem?: boolean;
+  govPortalUrl?: string;
 }

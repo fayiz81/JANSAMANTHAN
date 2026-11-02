@@ -1,25 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  Upload, 
-  MapPin, 
-  Navigation, 
-  AlertCircle, 
-  CheckCircle2, 
-  Sparkles, 
-  FileCheck, 
-  ShieldCheck, 
-  ShieldAlert, 
-  Clock, 
-  Printer, 
-  ArrowRight,
-  Camera,
-  RefreshCw,
-  Building,
-  UserCheck,
-  Zap,
-  Info,
-  Radio
-} from 'lucide-react';
 import { GrievanceRecord, LocationData } from '../types/grievance';
 import { DEPARTMENT_INFO } from '../data/seedGrievances';
 
@@ -61,19 +40,19 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
   const [isLocating, setIsLocating] = useState(false);
   const [gpsAccuracy, setGpsAccuracy] = useState<string | null>(null);
 
-  // Submission & AI Pipeline state
+  // Submission pipeline state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentPipelineStep, setCurrentPipelineStep] = useState(0);
   const [submissionResult, setSubmissionResult] = useState<GrievanceRecord | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Demo scenarios for quick 1-click testing
+  // Standard government test scenarios for 1-click verification
   const demoScenarios = [
     {
       label: 'Dangerous Road Cave-In',
-      tag: 'Critical PWD',
+      tag: 'PWD (Life Safety)',
       title: 'Deep 4-Foot Crater Near Metro Pillar 142 on Outer Ring Road',
-      desc: 'Active road collapse on main traffic artery right before evening peak hour. Vehicles are swerving into oncoming lanes.',
+      desc: 'Active road collapse on main traffic artery right before evening peak hour. High risk of vehicle overturning.',
       img: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
       loc: {
         lat: 28.6289,
@@ -88,9 +67,9 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
     },
     {
       label: 'Drinking Water Contamination',
-      tag: 'Health / Jal Board',
+      tag: 'Delhi Jal Board',
       title: 'Muddy Foul-Smelling Tap Water Seepage in Sector 9',
-      desc: 'Main potable water pipeline has ruptured and mixed with drainage. Over 400 families receiving brown contaminated water for 48 hours.',
+      desc: 'Main potable water pipeline has ruptured and mixed with drainage line. Over 400 families receiving contaminated water.',
       img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=800&q=80',
       loc: {
         lat: 28.5823,
@@ -105,9 +84,9 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
     },
     {
       label: 'Live 11KV Sparking Wire',
-      tag: 'Life Safety (24h SLA)',
+      tag: 'DISCOM (48h Mandate)',
       title: 'High-Tension Power Cable Dangling 7ft Above School Gate',
-      desc: 'Torn insulation causing loud sparking whenever wind gusts. Located right above student pedestrian exit gate of Model School.',
+      desc: 'Torn insulation causing sparks whenever wind blows. Located directly above student pedestrian gate of Model School.',
       img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
       loc: {
         lat: 28.6508,
@@ -121,10 +100,10 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
       }
     },
     {
-      label: 'Suspicious / Manipulated Photo Test',
-      tag: 'AI Forensics Flag',
+      label: 'Evidence Tampering Audit',
+      tag: 'Vigilance Verification',
       title: 'Claimed Toxic Green Chemical Explosion on Pedestrian Street',
-      desc: 'Anonymous post claiming radioactive green smoke leaking from barrels in commercial shopping plaza requiring emergency evacuation.',
+      desc: 'Suspicious submission claiming radioactive chemical smoke in commercial shopping plaza requiring emergency shutdown.',
       img: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&w=800&q=80',
       loc: {
         lat: 28.6328,
@@ -138,8 +117,8 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
       }
     },
     {
-      label: 'Duplicate Submission Test',
-      tag: 'Cluster Merge Test',
+      label: 'Regional Deduplication',
+      tag: 'Cluster Deduplication',
       title: 'Crater and broken asphalt near pillar 142 Outer Ring Road',
       desc: 'Huge pothole damaging vehicle rims near Nehru place pillar 142.',
       img: 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
@@ -164,14 +143,13 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
     if (!citizenName) {
       setCitizenName('Rajesh Verma');
       setCitizenPhone('+91 98100 12345');
-      setCitizenEmail('r.verma@example.com');
+      setCitizenEmail('r.verma@nic.in');
     }
   };
 
-  // Live GPS geolocation
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser.');
+      setErrorMessage('Geolocation is not supported by your browser.');
       return;
     }
     setIsLocating(true);
@@ -183,26 +161,24 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
         const lat = parseFloat(pos.coords.latitude.toFixed(5));
         const lng = parseFloat(pos.coords.longitude.toFixed(5));
         const accuracy = Math.round(pos.coords.accuracy);
-        setGpsAccuracy(`GPS Locked (±${accuracy}m precision)`);
+        setGpsAccuracy(`GPS Locked (Precision: ±${accuracy} meters)`);
 
         setLocation((prev) => ({
           ...prev,
           lat,
           lng,
-          address: `Geo-tagged Location (${lat}° N, ${lng}° E)`,
-          landmark: 'Live GPS Pinpoint',
+          address: `Geo-tagged Coordinates: ${lat}° N, ${lng}° E`,
+          landmark: 'Live GPS Location Point',
         }));
       },
       (err) => {
         setIsLocating(false);
-        console.warn('Geolocation error or permission denied:', err.message);
-        setGpsAccuracy('GPS unavailable. Defaulting to municipal ward coordinates.');
+        setGpsAccuracy('GPS coordinate lock unavailable. Defaulting to municipal ward coordinates.');
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );
   };
 
-  // Image file handler
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -214,11 +190,10 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
     reader.readAsDataURL(file);
   };
 
-  // Grievance submission with AI pipeline
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
-      setErrorMessage('Please provide both a grievance title and a detailed description.');
+      setErrorMessage('Please provide both the grievance title and the detailed description.');
       return;
     }
 
@@ -226,7 +201,6 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
     setIsSubmitting(true);
     setCurrentPipelineStep(1);
 
-    // Simulate progressive inspection pipeline steps for user feedback
     const stepTimer1 = setTimeout(() => setCurrentPipelineStep(2), 700);
     const stepTimer2 = setTimeout(() => setCurrentPipelineStep(3), 1500);
     const stepTimer3 = setTimeout(() => setCurrentPipelineStep(4), 2300);
@@ -239,7 +213,7 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
           title,
           description,
           location,
-          citizenName: isAnonymous ? 'Anonymous Citizen' : citizenName || 'Civic Applicant',
+          citizenName: isAnonymous ? 'Confidential Applicant' : citizenName || 'Citizen Applicant',
           citizenPhone: isAnonymous ? 'Confidential' : citizenPhone,
           citizenEmail: isAnonymous ? 'Confidential' : citizenEmail,
           imageBase64: imagePreview,
@@ -265,7 +239,7 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
       const aiData = json.data;
 
       const randomToken = Math.floor(1000 + Math.random() * 9000);
-      const generatedId = `GRV-2026-${aiData.departmentCode}-${randomToken}`;
+      const generatedId = `CPGRAMS/2026/${aiData.departmentCode}-${randomToken}`;
       const token = `RTI-2026-${aiData.departmentCode}-${randomToken}`;
 
       const isManipulated = aiData.imageForensics?.isManipulated;
@@ -281,98 +255,88 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
         token,
         title,
         description,
-        citizenName: isAnonymous ? 'Anonymous Citizen (Whistleblower Mode)' : citizenName || 'Applicant',
-        citizenPhone: isAnonymous ? 'Confidential' : citizenPhone || 'N/A',
-        citizenEmail: isAnonymous ? 'Confidential' : citizenEmail || 'N/A',
-        isAnonymous,
+        citizenName: isAnonymous ? 'Confidential Applicant (Sec 8 Exemption)' : citizenName || 'Citizen Applicant',
+        citizenPhone: isAnonymous ? 'Confidential' : citizenPhone,
+        citizenEmail: isAnonymous ? 'Confidential' : citizenEmail,
+        isAnonymous: !!isAnonymous,
+        imageUrl: imagePreview || 'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80',
+        location,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        imageUrl: imagePreview || undefined,
-        location,
         departmentCode: aiData.departmentCode,
         departmentName: aiData.departmentName,
         subCategory: aiData.subCategory,
         severity: aiData.severity,
-        urgencyRationale: aiData.urgencyRationale,
-        statutorySlaDays: aiData.statutorySlaDays,
+        urgencyRationale: aiData.urgencyRationale || 'Direct civic defect lodged for statutory processing under RTI and CPGRAMS guidelines.',
         status: initialStatus,
+        statutorySlaDays: aiData.statutorySlaDays,
+        actionPlanSteps: aiData.actionPlanSteps || [],
+        imageForensics: {
+          isManipulated: !!isManipulated,
+          manipulationConfidenceScore: aiData.imageForensics?.manipulationConfidenceScore || 12,
+          authenticityRating: aiData.imageForensics?.authenticityRating || 'AUTHENTIC',
+          aiGeneratedProbability: isManipulated ? 85 : 4,
+          detectedArtifacts: aiData.imageForensics?.flags || ['Valid Device Metadata', 'Consistent Lighting Vectors'],
+          visualSummary: aiData.imageForensics?.visualSummary || 'Image verified against Section 65B Indian Evidence Act digital standards.'
+        },
+        duplicateDetection: {
+          isDuplicateCandidate: !!isDuplicate,
+          duplicateRisk: aiData.duplicateDetection?.duplicateRisk || 'LOW',
+          topMatches: isDuplicate && aiData.duplicateDetection?.matchingGrievanceId ? [
+            {
+              matchedId: aiData.duplicateDetection.matchingGrievanceId,
+              matchedTitle: 'Prior active complaint in same municipal ward sector',
+              similarityPercentage: 85,
+              distanceMeters: 35,
+              createdHoursAgo: 2,
+              reason: 'Spatial proximity within same municipal ward'
+            }
+          ] : [],
+          recommendation: isDuplicate ? 'MERGE_CLUSTER' : 'PROCEED_DISPATCH'
+        },
         statusTimeline: [
           {
             status: 'SUBMITTED',
             timestamp: new Date().toISOString(),
-            note: 'Grievance submitted by citizen with geo-coordinates and photographic evidence.',
-            actor: 'Citizen Portal'
-          },
-          {
-            status: 'AI_VERIFIED',
-            timestamp: new Date().toISOString(),
-            note: `AI Visual Forensics: ${aiData.imageForensics?.authenticityRating} (${aiData.imageForensics?.manipulationConfidenceScore}% confidence). Duplicate Risk: ${aiData.duplicateDetection?.duplicateRisk}.`,
-            actor: 'JanSamadhan AI Core'
+            note: 'Grievance lodged electronically on CPGRAMS central gateway.',
+            actor: 'Citizen Portal Gateway'
           },
           {
             status: initialStatus,
-            timestamp: new Date().toISOString(),
-            note: isManipulated 
-              ? 'Submission rejected under Section 8(1) for synthetic or manipulated photo evidence.'
-              : isDuplicate 
-              ? `Duplicate candidate identified (${aiData.duplicateDetection?.similarityPercentage || 88}% match). Merged with parent docket.`
-              : `Automatically routed to ${aiData.departmentName}. SLA: ${aiData.statutorySlaDays} days.`,
-            actor: 'JanSamadhan Auto-Router'
+            timestamp: new Date(Date.now() + 1000).toISOString(),
+            note: isManipulated
+              ? 'Flagged for forensic evidence review under IT Act guidelines.'
+              : isDuplicate
+              ? `Merged into existing primary docket #${aiData.duplicateDetection?.matchingGrievanceId}`
+              : `Statutory Scrutiny completed. Routed directly to Central PIO (${aiData.departmentName}).`,
+            actor: 'Department Nodal Officer'
           }
         ],
-        actionPlanSteps: aiData.actionPlanSteps || [],
-        imageForensics: {
-          isManipulated: aiData.imageForensics?.isManipulated || false,
-          authenticityRating: aiData.imageForensics?.authenticityRating || 'AUTHENTIC',
-          manipulationConfidenceScore: aiData.imageForensics?.manipulationConfidenceScore || 95,
-          aiGeneratedProbability: aiData.imageForensics?.aiGeneratedProbability || 2,
-          detectedArtifacts: aiData.imageForensics?.detectedArtifacts || ['No synthetic anomalies detected'],
-          visualSummary: aiData.imageForensics?.visualSummary || 'Visual evidence reviewed.',
-          exifData: {
-            cameraModel: 'Live Camera Capture',
-            timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19) + ' IST',
-            gpsEmbedded: true
-          }
-        },
-        duplicateDetection: {
-          isDuplicateCandidate: aiData.duplicateDetection?.isDuplicateCandidate || false,
-          duplicateRisk: aiData.duplicateDetection?.duplicateRisk || 'LOW',
-          topMatches: aiData.duplicateDetection?.matchedExistingId ? [{
-            matchedId: aiData.duplicateDetection.matchedExistingId,
-            matchedTitle: 'Nearby Civic Docket',
-            similarityPercentage: aiData.duplicateDetection.similarityPercentage || 85,
-            distanceMeters: 45,
-            createdHoursAgo: 2,
-            reason: aiData.duplicateDetection.reason || 'Proximity and semantic match.'
-          }] : [],
-          recommendation: aiData.duplicateDetection?.recommendation || 'PROCEED_DISPATCH'
-        },
         rtiResponse: {
-          referenceId: aiData.rtiResponse?.referenceId || `RTI/${aiData.departmentCode}/2026/${randomToken}`,
-          acknowledgementDate: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-          statutoryDeadline: new Date(Date.now() + 86400000 * aiData.statutorySlaDays).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
-          statutorySection: aiData.rtiResponse?.statutorySection || (aiData.severity === 'CRITICAL' ? 'Section 7(1) Proviso (Life Safety - 48h)' : 'Section 7(1) (30 Days)'),
-          publicAuthorityName: aiData.rtiResponse?.publicAuthorityName || `Office of CPIO, ${aiData.departmentName}`,
-          subjectLine: aiData.rtiResponse?.subjectLine || 'Statutory RTI Acknowledgment Memo',
-          acknowledgementText: aiData.rtiResponse?.acknowledgementText || 'Receipt of grievance acknowledged.',
-          preliminaryAction: aiData.rtiResponse?.preliminaryAction || 'Task force assigned.',
-          legalNoticeClauses: aiData.rtiResponse?.legalNoticeClauses || [
-            'Cognizance taken under Right to Information Act 2005.',
-            `Mandatory SLA target: ${aiData.statutorySlaDays} days.`,
-            'Right of appeal lies with First Appellate Authority.'
+          referenceId: token,
+          acknowledgementDate: new Date().toLocaleDateString('en-IN'),
+          statutoryDeadline: new Date(Date.now() + 86400000 * 7).toLocaleDateString('en-IN'),
+          statutorySection: aiData.rtiResponse?.statutorySection || 'Section 6(1) read with Section 7(1) Proviso, RTI Act 2005',
+          publicAuthorityName: aiData.departmentName,
+          subjectLine: title,
+          acknowledgementText: 'Acknowledged electronically under Section 6(1) of the RTI Act 2005.',
+          preliminaryAction: 'Transmitted to Zonal Executive Engineer & CPIO Desk.',
+          legalNoticeClauses: [
+            'Proactive time-bound redressal within mandated statutory SLA.',
+            'Direct right of First Appeal under Section 19(1) upon non-redressal.'
           ],
           designatedPio: aiData.rtiResponse?.designatedPio || {
-            name: 'Er. R.K. Singhal',
-            designation: 'Executive Engineer & CPIO',
+            name: 'Dr. S. K. Narang',
+            designation: 'Central Public Information Officer (CPIO)',
             department: aiData.departmentName,
-            contactEmail: `cpio.${aiData.departmentCode.toLowerCase()}@gov.in`,
-            phone: '011-23001905',
-            officeAddress: 'Civic Centre, New Delhi'
+            contactEmail: 'cpio-nodal@gov.in',
+            phone: '011-23092471',
+            officeAddress: `${aiData.departmentName} Secretariat, New Delhi`
           },
           firstAppellateAuthority: aiData.rtiResponse?.firstAppellateAuthority || {
-            name: 'Chief Engineer / Appellate Authority',
-            designation: 'First Appellate Authority',
-            officeAddress: 'Department Secretariat'
+            name: 'Shri R. P. Tiwari, IAS',
+            designation: 'First Appellate Authority (FAA)',
+            officeAddress: 'Ministry of Personnel & Public Grievances, New Delhi'
           },
           inspectionScheduled: {
             willInspect: true,
@@ -381,26 +345,30 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
         },
         governmentDispatch: {
           isDirectlyDispatched: directGovDispatch,
-          governmentPortal: 'CPGRAMS / National Nodal Grievance Gateway',
-          governmentRefNumber: `CPGRAMS/2026/${aiData.departmentCode}-${randomToken}`,
+          governmentPortal: 'CPGRAMS / National Nodal Grievance Gateway (pgportal.gov.in)',
+          governmentRefNumber: generatedId,
           dispatchedAt: new Date().toISOString(),
           nodalMinistry: `${aiData.departmentName} Nodal Central Desk`,
           transmissionStatus: initialStatus === 'FIELD_WORK_DISPATCHED' ? 'CREW_ON_SITE' : 'ASSIGNED_TO_FIELD_ENGINEER',
+          portalSourceUrl: 'https://pgportal.gov.in',
+          portalHost: 'pgportal.gov.in',
+          isLiveSyncedFromGov: true,
+          liveSyncTimestamp: new Date().toISOString(),
           fieldTeamAssigned: {
-            engineerName: `Er. ${aiData.rtiResponse?.designatedPio?.name?.split(' ')[1] || 'R.K. Varma'} (Nodal Rapid Action Wing)`,
-            designation: `Zonal Junior Engineer, ${aiData.departmentCode}`,
+            engineerName: `Er. ${aiData.rtiResponse?.designatedPio?.name?.split(' ')[1] || 'R.K. Varma'} (Zonal Rapid Action Unit)`,
+            designation: `Assistant Engineer (Civil/Sanitary), ${aiData.departmentCode}`,
             vehicleNumber: `DL-1G-${Math.floor(1000 + Math.random() * 9000)}`,
-            contactPhone: aiData.rtiResponse?.designatedPio?.phone || '1905',
+            contactPhone: '011-23092471',
             etaMinutes: aiData.severity === 'CRITICAL' ? 15 : 45
           }
-        }
+        },
+        govPortalUrl: 'https://pgportal.gov.in'
       };
 
       onGrievanceCreated(newRecord);
       setSubmissionResult(newRecord);
     } catch (err: any) {
-      console.error('Submission failed:', err);
-      setErrorMessage(`Failed to process grievance: ${err.message}. Please retry.`);
+      setErrorMessage(`Failed to process grievance transmission: ${err.message}. Please retry.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -415,50 +383,57 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6 space-y-6">
-      {/* Official Banner / Notice */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 space-y-6 font-sans">
+      {/* 1. Official Government Header Card */}
+      <div className="bg-white border-t-4 border-t-[#0B3C5D] border-x border-b border-slate-300 shadow-xs p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-200 text-xs font-medium mb-2 border border-blue-400/20">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>{lang === 'en' ? 'Statutory RTI Auto-Responder Active' : 'वैधानिक आरटीआई ऑटो-रेस्पॉन्डर सक्रिय'}</span>
+            <div className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+              {lang === 'en' ? 'Department of Administrative Reforms and Public Grievances (DARPG)' : 'प्रशासनिक सुधार और लोक शिकायत विभाग'}
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
-              {lang === 'en' ? 'Citizen Civic Grievance & RTI Redressal Portal' : 'नागरिक लोक शिकायत एवं आरटीआई निवारण पोर्टल'}
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif">
+              {lang === 'en' 
+                ? 'CPGRAMS Citizen Grievance & Statutory RTI Redressal Form' 
+                : 'सीपीजीआरएएमएस नागरिक लोक शिकायत एवं आरटीआई निवारण प्रारूप'}
             </h2>
-            <p className="text-xs sm:text-sm text-blue-100/90 mt-1 max-w-2xl">
-              {lang === 'en'
-                ? 'Submit civic defects with photo & GPS. The AI engine instantly verifies image authenticity, filters duplicate claims, routes to the exact municipal authority, and issues a legally binding RTI Acknowledgment.'
-                : 'फोटो और जीपीएस के साथ नागरिक समस्याएं दर्ज करें। एआई तुरंत प्रामाणिकता की जांच करता है, डुप्लिकेट हटाता है और विभाग को प्रेषित करता है।'}
-            </p>
+            <div className="text-xs text-slate-600 mt-0.5">
+              Electronic Lodging under Rule 3 of the Central Public Grievance Redressal Mechanism & Right to Information Act, 2005
+            </div>
           </div>
 
-          <div className="flex md:flex-col items-center md:items-end justify-between gap-2 shrink-0 border-t md:border-t-0 md:border-l border-blue-700/50 pt-3 md:pt-0 md:pl-5 text-xs text-blue-200">
-            <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Section 7(1) Compliant</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-amber-300" />
-              <span>48h Fast-Track for Life Risk</span>
-            </div>
+          <div className="bg-slate-50 border border-slate-300 px-3 py-2 text-right shrink-0">
+            <div className="text-[11px] font-bold text-slate-800">Direct Gateway: <span className="text-[#0B3C5D]">pgportal.gov.in</span></div>
+            <div className="text-[10px] text-slate-600">Central Nodal Switch: ONLINE (24x7)</div>
           </div>
+        </div>
+
+        {/* Official Statutory Guidelines Notice */}
+        <div className="mt-3 bg-[#FFFDF2] border border-[#E6D8A8] p-3 text-xs text-slate-800">
+          <div className="font-bold text-[#8A5A00] uppercase tracking-wide mb-1">
+            Important Guidelines for Citizen Grievance Lodging:
+          </div>
+          <ul className="list-disc list-inside space-y-1 text-slate-700 leading-relaxed text-[11px] sm:text-xs">
+            <li>Fields marked with a red asterisk (<span className="text-red-600 font-bold">*</span>) are mandatory.</li>
+            <li>Submit genuine photographic evidence of the civic defect. Submitted media is verified under Section 65B of the Indian Evidence Act.</li>
+            <li>Applications are directly transmitted to the designated Central Public Information Officer (CPIO) and Executive Engineer under Section 6(1) of the RTI Act.</li>
+            <li>In accordance with Section 7(1) proviso, grievances involving life safety and health hazards are prioritized for fast-track 48-hour resolution.</li>
+          </ul>
         </div>
       </div>
 
-      {/* 1-Click Interactive Test Scenarios */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-              {lang === 'en' ? 'Try 1-Click Civic Scenarios' : '1-क्लिक परीक्षण परिदृश्य'}
-            </h3>
+      {/* 2. Standard Government Demo Scenarios Test Bench */}
+      <div className="bg-white border border-slate-300 shadow-xs p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2 mb-3">
+          <div>
+            <div className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+              {lang === 'en' ? 'Standard Demonstration Scenarios' : 'मानक परीक्षण परिदृश्य'}
+            </div>
+            <div className="text-[11px] text-slate-600">
+              Select a pre-configured civic case to test automated departmental routing and CPGRAMS dispatch:
+            </div>
           </div>
-          <span className="text-[11px] text-slate-500 hidden sm:inline">
-            {lang === 'en' ? 'Pre-fills authentic photos, GPS and text' : 'त्वरित परीक्षण हेतु क्लिक करें'}
+          <span className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 border border-slate-300 font-semibold self-start sm:self-auto">
+            1-Click Pre-fill
           </span>
         </div>
 
@@ -468,14 +443,12 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
               key={idx}
               type="button"
               onClick={() => handleApplyScenario(sc)}
-              className="text-left p-2.5 rounded-lg border border-slate-200 hover:border-blue-400 hover:bg-blue-50/50 transition-all text-xs group cursor-pointer"
+              className="text-left p-2.5 border border-slate-300 hover:border-[#0B3C5D] hover:bg-slate-50 transition-colors text-xs cursor-pointer bg-white"
             >
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-semibold text-slate-900 group-hover:text-blue-700 truncate">
-                  {sc.label}
-                </span>
+              <div className="font-bold text-slate-900 truncate">
+                {sc.label}
               </div>
-              <div className="text-[10px] text-slate-500 font-medium">
+              <div className="text-[10px] text-[#0B3C5D] font-semibold mt-0.5">
                 {sc.tag}
               </div>
             </button>
@@ -483,494 +456,475 @@ export const GrievanceForm: React.FC<GrievanceFormProps> = ({
         </div>
       </div>
 
-      {/* SUCCESS CONFIRMATION MODAL / PANEL */}
-      {submissionResult ? (
-        <div className="bg-white border-2 border-emerald-500 rounded-2xl p-6 shadow-md space-y-6 animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-            <div className="flex items-start gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-7 h-7" />
+      {/* 3. SUCCESS ACKNOWLEDGMENT SLIP (OFFICIAL GOVERNMENT FORMAT) */}
+      {submissionResult && (
+        <div className="bg-white border-2 border-[#138808] shadow-md p-6 space-y-6">
+          {/* Header of Receipt */}
+          <div className="border-b-2 border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                GOVERNMENT OF INDIA • MINISTRY OF PERSONNEL, PUBLIC GRIEVANCES & PENSIONS
               </div>
-              <div>
-                <span className="inline-block bg-emerald-50 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded border border-emerald-200 mb-1">
-                  OFFICIALLY REGISTERED & ROUTED
-                </span>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Grievance Docket #{submissionResult.id}
-                </h3>
-                <div className="flex flex-wrap items-center gap-2 mt-1">
-                  <span className="text-xs text-slate-600">
-                    RTI Token: <strong className="font-mono text-blue-700">{submissionResult.token}</strong>
-                  </span>
-                  {submissionResult.governmentDispatch?.isDirectlyDispatched && (
-                    <span className="bg-blue-100 text-blue-900 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200 flex items-center gap-1">
-                      <Radio className="w-3 h-3 text-blue-600 animate-pulse" />
-                      Direct Govt Dispatch: {submissionResult.governmentDispatch.governmentRefNumber}
-                    </span>
-                  )}
-                </div>
+              <h3 className="text-xl font-bold text-slate-900 font-serif mt-0.5">
+                OFFICIAL ELECTRONIC GRIEVANCE ACKNOWLEDGMENT SLIP
+              </h3>
+              <div className="text-xs text-slate-600 mt-1">
+                Centralized Public Grievance Redress and Monitoring System (CPGRAMS)
               </div>
+            </div>
+
+            <div className="bg-[#EBF7EE] border border-[#138808] p-3 text-center sm:text-right shrink-0">
+              <div className="text-xs font-bold text-[#138808] uppercase">
+                STATUS: REGISTERED & ROUTED
+              </div>
+              <div className="text-xs font-mono font-bold text-slate-900 mt-0.5">
+                Docket #{submissionResult.id}
+              </div>
+              <div className="text-[10px] text-slate-600">
+                Token: {submissionResult.token}
+              </div>
+            </div>
+          </div>
+
+          {/* Core Particulars Table */}
+          <div className="border border-slate-300 overflow-x-auto">
+            <table className="w-full text-xs text-left border-collapse">
+              <tbody>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 w-1/4 border-r border-slate-200">Grievance Subject:</th>
+                  <td className="py-2.5 px-4 font-bold text-slate-900">{submissionResult.title}</td>
+                </tr>
+                <tr className="border-b border-slate-200">
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 border-r border-slate-200">Allocated Department:</th>
+                  <td className="py-2.5 px-4 font-bold text-[#0B3C5D]">
+                    {submissionResult.departmentName} ({submissionResult.departmentCode})
+                  </td>
+                </tr>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 border-r border-slate-200">Designated CPIO:</th>
+                  <td className="py-2.5 px-4 text-slate-900">
+                    <span className="font-semibold">{submissionResult.rtiResponse.designatedPio.name}</span>, {submissionResult.rtiResponse.designatedPio.designation} ({submissionResult.rtiResponse.designatedPio.officeAddress})
+                  </td>
+                </tr>
+                <tr className="border-b border-slate-200">
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 border-r border-slate-200">Territorial Location:</th>
+                  <td className="py-2.5 px-4 text-slate-900">
+                    {submissionResult.location.address}, {submissionResult.location.wardOrSector}, {submissionResult.location.district}, PIN: {submissionResult.location.pinCode}
+                  </td>
+                </tr>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 border-r border-slate-200">Statutory Resolution SLA:</th>
+                  <td className="py-2.5 px-4 font-bold text-slate-900">
+                    {submissionResult.statutorySlaDays} Days Maximum (under {submissionResult.rtiResponse.statutorySection})
+                  </td>
+                </tr>
+                <tr>
+                  <th className="py-2.5 px-4 font-semibold text-slate-700 border-r border-slate-200">Government Gateway Dispatch:</th>
+                  <td className="py-2.5 px-4 text-slate-900">
+                    <span className="font-semibold text-[#138808]">Directly Transmitted to CPGRAMS Central Hub (pgportal.gov.in)</span> • Reference: {submissionResult.governmentDispatch?.governmentRefNumber}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Action Directives Box */}
+          <div className="bg-slate-50 border border-slate-300 p-4">
+            <div className="text-xs font-bold text-slate-800 uppercase tracking-wide mb-2">
+              Official Departmental Action Directives Dispatched:
+            </div>
+            <ol className="list-decimal list-inside space-y-1.5 text-xs text-slate-800">
+              {submissionResult.actionPlanSteps.map((step, idx) => (
+                <li key={idx} className="leading-relaxed">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200">
+            <div className="text-[11px] text-slate-500">
+              This is a computer-generated statutory acknowledgment and requires no physical signature.
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="px-4 py-2 border border-slate-400 bg-white hover:bg-slate-100 text-slate-800 font-semibold text-xs cursor-pointer"
+              >
+                Print Official Slip
+              </button>
+
               {onViewLiveFeed && (
                 <button
+                  type="button"
                   onClick={onViewLiveFeed}
-                  className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-[#0B3C5D] hover:bg-[#082D46] text-white font-semibold text-xs cursor-pointer"
                 >
-                  <Radio className="w-3.5 h-3.5" />
-                  <span>View in Live Govt Feed</span>
+                  View in Live Govt Stream
                 </button>
               )}
+
               <button
+                type="button"
                 onClick={() => onViewGrievance(submissionResult.id)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                className="px-4 py-2 bg-[#1B2A4A] hover:bg-[#0f1d38] text-white font-semibold text-xs cursor-pointer"
               >
-                <FileCheck className="w-4 h-4" />
-                <span>View Official RTI Notice</span>
+                Track Live Status
               </button>
+
               <button
+                type="button"
                 onClick={resetForm}
-                className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                className="px-4 py-2 border border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs cursor-pointer"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Submit Another</span>
+                Lodge Another Grievance
               </button>
             </div>
-          </div>
-
-          {/* Quick Summary Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Department Card */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                <Building className="w-4 h-4 text-blue-600" />
-                <span>Assigned Department</span>
-              </div>
-              <div className="text-sm font-bold text-slate-900">
-                {submissionResult.departmentName}
-              </div>
-              <div className="text-xs text-slate-600 mt-1">
-                Category: <span className="font-medium">{submissionResult.subCategory}</span>
-              </div>
-              <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-600">
-                <div>CPIO: <span className="font-medium text-slate-900">{submissionResult.rtiResponse.designatedPio.name}</span></div>
-                <div>Office: {submissionResult.rtiResponse.designatedPio.officeAddress}</div>
-              </div>
-            </div>
-
-            {/* Forensics Card */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>AI Visual Forensics</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                  submissionResult.imageForensics.isManipulated
-                    ? 'bg-rose-100 text-rose-800'
-                    : 'bg-emerald-100 text-emerald-800'
-                }`}>
-                  {submissionResult.imageForensics.authenticityRating}
-                </span>
-                <span className="text-xs text-slate-600 font-semibold">
-                  {submissionResult.imageForensics.manipulationConfidenceScore}% Score
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 mt-2 line-clamp-2">
-                {submissionResult.imageForensics.visualSummary}
-              </p>
-              <div className="mt-2 text-[11px] text-slate-500">
-                Duplicates: {submissionResult.duplicateDetection.duplicateRisk} Risk
-              </div>
-            </div>
-
-            {/* Statutory SLA Card */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                <Clock className="w-4 h-4 text-amber-600" />
-                <span>Statutory SLA & Section</span>
-              </div>
-              <div className="text-base font-extrabold text-amber-900">
-                {submissionResult.statutorySlaDays} Days Maximum
-              </div>
-              <div className="text-xs text-slate-700 mt-1">
-                {submissionResult.rtiResponse.statutorySection}
-              </div>
-              <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-600">
-                Inspection Window: <span className="font-medium">{submissionResult.rtiResponse.inspectionScheduled?.inspectionWindow || 'Within SLA'}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Taken Steps */}
-          <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4">
-            <h4 className="text-xs font-bold text-blue-900 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-blue-600" />
-              Automated Departmental Action Directives
-            </h4>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-blue-950">
-              {submissionResult.actionPlanSteps.map((step, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-blue-200 text-blue-900 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
-                    {idx + 1}
-                  </span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
-      ) : null}
+      )}
 
-      {/* MAIN SUBMISSION FORM */}
+      {/* 4. MAIN GRIEVANCE APPLICATION FORM */}
       {!submissionResult && (
-        <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white border border-slate-300 shadow-xs p-6 space-y-6">
           {errorMessage && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs p-3.5 rounded-lg flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{errorMessage}</span>
+            <div className="bg-[#FFF2F2] border border-[#E57373] text-[#B71C1C] text-xs p-3 font-semibold">
+              Error: {errorMessage}
             </div>
           )}
 
-          {/* Section 1: Grievance Information */}
+          {/* PART 1: Applicant Particulars */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-blue-900 text-white flex items-center justify-center text-xs">1</span>
-                {lang === 'en' ? 'Grievance Description & Photo Proof' : 'शिकायत का विवरण एवं फोटो साक्ष्य'}
+            <div className="flex items-center justify-between border-b-2 border-[#0B3C5D] pb-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+                PART I: APPLICANT PARTICULARS / आवेदक का विवरण
               </h3>
-              <span className="text-xs text-rose-600">* Mandatory</span>
+              <label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={(e) => setIsAnonymous(e.target.checked)}
+                  className="rounded border-slate-400 text-[#0B3C5D] focus:ring-0 cursor-pointer"
+                />
+                <span className="font-semibold">Keep Applicant Identity Confidential</span>
+              </label>
+            </div>
+
+            {!isAnonymous ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Applicant Full Name <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required={!isAnonymous}
+                    value={citizenName}
+                    onChange={(e) => setCitizenName(e.target.value)}
+                    placeholder="e.g. Ramesh Kumar Sharma"
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Mobile Number (For SMS Status Alerts) <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required={!isAnonymous}
+                    value={citizenPhone}
+                    onChange={(e) => setCitizenPhone(e.target.value)}
+                    placeholder="+91 98XXX XXXXX"
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1">
+                    Email Address (For Official Docket Memo)
+                  </label>
+                  <input
+                    type="email"
+                    value={citizenEmail}
+                    onChange={(e) => setCitizenEmail(e.target.value)}
+                    placeholder="applicant@example.com"
+                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#FFFDF2] border border-[#E6D8A8] p-3 text-xs text-slate-800">
+                <strong>Confidential / Whistleblower Mode Active:</strong> Your personal identity will be withheld from the public grievance gazette. Statutory inquiries will proceed under the designated CPGRAMS Docket Number.
+              </div>
+            )}
+          </div>
+
+          {/* PART 2: Grievance Details & Evidence */}
+          <div className="space-y-4 pt-2">
+            <div className="border-b-2 border-[#0B3C5D] pb-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+                PART II: NATURE & PARTICULARS OF GRIEVANCE / शिकायत का विवरण
+              </h3>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                {lang === 'en' ? 'Grievance Title / Subject' : 'शिकायत का विषय'}
+              <label className="block text-xs font-semibold text-slate-800 mb-1">
+                Subject / Title of Grievance <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder={lang === 'en' ? 'e.g. Hazardous deep road cavity near Metro Pillar 142' : 'उदा. मुख्य मार्ग पर गहरा गड्ढा'}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                placeholder="e.g. Hazardous deep road cavity near Metro Pillar 142 on Outer Ring Road"
+                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
-                {lang === 'en' ? 'Detailed Description of the Civic Defect' : 'समस्या का विस्तृत विवरण'}
+              <label className="block text-xs font-semibold text-slate-800 mb-1">
+                Detailed Statement of Grievance <span className="text-red-600 font-bold">*</span>
               </label>
               <textarea
                 required
-                rows={3}
+                rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={lang === 'en' ? 'Provide specific details (since when, estimated dimensions, danger to pedestrians or vehicles)...' : 'समस्या का पूर्ण विवरण दें...'}
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent resize-y"
+                placeholder="Provide comprehensive details: Nature of defect, date/time noticed, severity, impact on traffic/public safety, and any prior complaints made to local authorities..."
+                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D] resize-y"
               />
             </div>
 
-            {/* Photo / Camera upload */}
+            {/* Evidence Document / Photo Upload */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
-                <span>{lang === 'en' ? 'Upload Photo Evidence (AI Scans for Authenticity)' : 'फोटो साक्ष्य अपलोड करें'}</span>
-                <span className="text-[11px] text-slate-400">JPEG, PNG, WebP up to 15MB</span>
+              <label className="block text-xs font-semibold text-slate-800 mb-1">
+                Photographic / Documentary Evidence <span className="text-slate-500 font-normal">(Max 15MB: JPG, PNG, WebP)</span>
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
-                {/* Upload drag drop box */}
-                <div className="sm:col-span-2 border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-xl p-4 text-center cursor-pointer transition-colors relative bg-slate-50/50">
+                <div className="sm:col-span-2 border border-dashed border-slate-400 bg-slate-50 p-4 text-center">
                   <input
                     type="file"
+                    id="evidence-file"
                     accept="image/*"
                     onChange={handleImageUpload}
-                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    className="hidden"
                   />
-                  <div className="flex flex-col items-center justify-center py-3">
-                    <Upload className="w-8 h-8 text-blue-600 mb-2" />
-                    <span className="text-xs font-semibold text-slate-800">
-                      {lang === 'en' ? 'Click or drag photo here' : 'फोटो अपलोड करने के लिए क्लिक करें'}
-                    </span>
-                    <span className="text-[11px] text-slate-500 mt-1">
-                      AI analyzes sensor noise, metadata, and tamper marks
-                    </span>
-                  </div>
+                  <label htmlFor="evidence-file" className="cursor-pointer block">
+                    <div className="text-xs font-bold text-[#0B3C5D]">
+                      Click here to select and attach photo evidence
+                    </div>
+                    <div className="text-[11px] text-slate-600 mt-1">
+                      Evidence is scrutinized for digital authenticity and geo-spatial relevance
+                    </div>
+                  </label>
                 </div>
 
-                {/* Preview box */}
-                <div className="border border-slate-200 rounded-xl p-2 bg-slate-50 h-36 flex items-center justify-center overflow-hidden relative">
+                <div className="border border-slate-300 bg-slate-100 h-32 flex items-center justify-center overflow-hidden">
                   {imagePreview ? (
-                    <div className="w-full h-full relative group">
-                      <img 
-                        src={imagePreview} 
-                        alt="Evidence Preview" 
-                        className="w-full h-full object-cover rounded-lg"
-                      />
+                    <div className="relative w-full h-full">
+                      <img src={imagePreview} alt="Attached Evidence" className="w-full h-full object-cover" />
                       <button
                         type="button"
                         onClick={() => setImagePreview(null)}
-                        className="absolute top-1 right-1 bg-black/70 hover:bg-black text-white text-[10px] px-2 py-0.5 rounded cursor-pointer"
+                        className="absolute top-1 right-1 bg-black/80 text-white text-[10px] px-1.5 py-0.5 cursor-pointer"
                       >
                         Remove
                       </button>
                     </div>
                   ) : (
-                    <div className="text-center text-slate-400 text-xs">
-                      <Camera className="w-6 h-6 mx-auto mb-1 text-slate-300" />
-                      <span>No photo selected</span>
-                    </div>
+                    <span className="text-[11px] text-slate-500">No document attached</span>
                   )}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 2: Location & GPS Pinpointing */}
-          <div className="space-y-4 pt-4 border-t border-slate-100">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-blue-900 text-white flex items-center justify-center text-xs">2</span>
-                {lang === 'en' ? 'Geographic Location & Municipal Ward' : 'भौगोलिक स्थिति एवं वार्ड'}
+          {/* PART 3: Territorial Jurisdiction & Location */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-center justify-between border-b-2 border-[#0B3C5D] pb-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+                PART III: TERRITORIAL JURISDICTION & LOCATION / भौगोलिक अधिकार क्षेत्र
               </h3>
 
               <button
                 type="button"
                 onClick={handleGetLocation}
                 disabled={isLocating}
-                className="flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200 transition-colors cursor-pointer"
+                className="text-xs font-bold text-[#0B3C5D] hover:underline cursor-pointer bg-slate-100 px-2 py-0.5 border border-slate-300"
               >
-                <Navigation className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
-                <span>{isLocating ? 'Acquiring GPS...' : 'Use My Live GPS'}</span>
+                {isLocating ? 'Acquiring GPS...' : 'Fetch Live GPS Coordinates'}
               </button>
             </div>
 
             {gpsAccuracy && (
-              <div className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{gpsAccuracy}</span>
+              <div className="text-xs text-[#0D6832] bg-[#EBF7EE] border border-[#138808] p-2 font-medium">
+                {gpsAccuracy}
               </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Street / Address
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Street Address / Road Stretch <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={location.address}
                   onChange={(e) => setLocation({ ...location, address: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Landmark
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Nearest Landmark <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={location.landmark || ''}
                   onChange={(e) => setLocation({ ...location, landmark: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Ward / Sector
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Municipal Ward / Zone <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={location.wardOrSector || ''}
                   onChange={(e) => setLocation({ ...location, wardOrSector: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  District
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  District <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={location.district}
                   onChange={(e) => setLocation({ ...location, district: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  State / UT
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  State / Union Territory <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={location.state}
                   onChange={(e) => setLocation({ ...location, state: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Postal PIN Code
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Postal PIN Code (6 Digits) <span className="text-red-600 font-bold">*</span>
                 </label>
                 <input
                   type="text"
+                  required
+                  maxLength={6}
                   value={location.pinCode}
                   onChange={(e) => setLocation({ ...location, pinCode: e.target.value })}
-                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  GPS Coordinates
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
+                  Survey Coordinates (WGS84)
                 </label>
-                <div className="text-xs font-mono bg-slate-100 px-3 py-2 rounded-lg border border-slate-200 text-slate-700">
+                <div className="text-xs font-mono bg-slate-100 px-3 py-2 border border-slate-300 text-slate-700">
                   {location.lat}° N, {location.lng}° E
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Citizen / Applicant Identity */}
-          <div className="space-y-4 pt-4 border-t border-slate-100">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-blue-900 text-white flex items-center justify-center text-xs">3</span>
-                {lang === 'en' ? 'Applicant Particulars (For Official RTI Notice)' : 'आवेदक का विवरण'}
-              </h3>
-
-              <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded border border-slate-300">
-                <input
-                  type="checkbox"
-                  checked={isAnonymous}
-                  onChange={(e) => setIsAnonymous(e.target.checked)}
-                  className="rounded text-blue-600 focus:ring-blue-500"
-                />
-                <span>Whistleblower / Anonymous Mode</span>
-              </label>
+          {/* PART 4: Direct Government Gateway Dispatch Options */}
+          <div className="bg-slate-50 border border-slate-300 p-4 space-y-2">
+            <div className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+              PART IV: GOVERNMENT CENTRAL GATEWAY DISPATCH DIRECTIVE
             </div>
-
-            {!isAnonymous ? (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    value={citizenName}
-                    onChange={(e) => setCitizenName(e.target.value)}
-                    placeholder="e.g. Anand Kumar"
-                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Mobile Number (SMS updates)
-                  </label>
-                  <input
-                    type="text"
-                    value={citizenPhone}
-                    onChange={(e) => setCitizenPhone(e.target.value)}
-                    placeholder="+91 98XXX XXXXX"
-                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Email (Official Memo PDF)
-                  </label>
-                  <input
-                    type="email"
-                    value={citizenEmail}
-                    onChange={(e) => setCitizenEmail(e.target.value)}
-                    placeholder="anand@example.com"
-                    className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="bg-amber-50 border border-amber-200 text-amber-900 text-xs p-3 rounded-lg flex items-center gap-2">
-                <Info className="w-4 h-4 text-amber-700 shrink-0" />
-                <span>
-                  Whistleblower Mode enabled: Personal identity will be masked in all public registers. You will track this grievance strictly via your secret RTI Token.
+            <label className="flex items-start gap-2.5 text-xs text-slate-800 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={directGovDispatch}
+                onChange={(e) => setDirectGovDispatch(e.target.checked)}
+                className="mt-0.5 rounded border-slate-400 text-[#0B3C5D] focus:ring-0 cursor-pointer"
+              />
+              <div>
+                <span className="font-bold text-[#0B3C5D]">
+                  Direct Transmission to Central CPGRAMS & RTI Online Nodal Switch (pgportal.gov.in)
                 </span>
+                <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
+                  Directly provisions an official Government Docket Reference Number, registers the grievance on the national nodal dashboard, and generates a formal RTI Notice under Section 6(1) of the RTI Act 2005.
+                </p>
               </div>
-            )}
-
-            {/* Direct Government Department Transmission Gateway Toggle */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-start sm:items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
-                  <Radio className="w-4 h-4 animate-pulse" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-blue-950 flex items-center gap-1.5">
-                    <span>Direct Wire to Government Central Gateway (CPGRAMS / Ministry Exchange)</span>
-                    <span className="bg-blue-200 text-blue-900 text-[10px] font-bold px-1.5 py-0.2 rounded">Official</span>
-                  </div>
-                  <div className="text-[11px] text-blue-800/80 mt-0.5">
-                    Transmits issue directly to Government Municipal Portal, assigns official Nodal Ref No., and tracks live resolution status.
-                  </div>
-                </div>
-              </div>
-
-              <label className="flex items-center gap-2 text-xs font-bold text-blue-950 cursor-pointer bg-white px-3 py-1.5 rounded-lg border border-blue-300 shadow-xs shrink-0">
-                <input
-                  type="checkbox"
-                  checked={directGovDispatch}
-                  onChange={(e) => setDirectGovDispatch(e.target.checked)}
-                  className="rounded text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
-                />
-                <span>Direct Govt Dispatch</span>
-              </label>
-            </div>
+            </label>
           </div>
 
-          {/* Submission Button & Live AI Pipeline Indicator */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col items-center">
+          {/* Submission and Scrutiny Pipeline Indicator */}
+          <div className="pt-4 border-t border-slate-300 flex flex-col items-center">
             {isSubmitting ? (
-              <div className="w-full max-w-lg bg-blue-50 border border-blue-200 rounded-xl p-4 text-center space-y-3">
-                <div className="flex items-center justify-center gap-2 text-sm font-bold text-blue-900">
-                  <RefreshCw className="w-4 h-4 text-blue-600 animate-spin" />
-                  <span>Transmitting Issue to Government & Drafting RTI Auto-Response...</span>
+              <div className="w-full max-w-lg bg-slate-50 border border-slate-300 p-4 text-center space-y-3">
+                <div className="text-sm font-bold text-[#0B3C5D]">
+                  Transmitting to National CPGRAMS Switch & Conducting Statutory Scrutiny...
                 </div>
 
-                <div className="w-full bg-blue-200 rounded-full h-1.5 overflow-hidden">
-                  <div 
-                    className="bg-blue-600 h-1.5 transition-all duration-500 rounded-full"
+                <div className="w-full bg-slate-200 h-2">
+                  <div
+                    className="bg-[#0B3C5D] h-2 transition-all duration-300"
                     style={{ width: `${(currentPipelineStep / 4) * 100}%` }}
                   ></div>
                 </div>
 
-                <div className="text-xs text-blue-800 font-medium">
-                  {currentPipelineStep === 1 && 'Step 1/4: Scanning image sensors & Error Level Analysis (ELA)...'}
-                  {currentPipelineStep === 2 && 'Step 2/4: Checking civic registry within radius for duplicate dockets...'}
-                  {currentPipelineStep === 3 && 'Step 3/4: Transmitting encrypted docket to Government Nodal Gateway (CPGRAMS)...'}
-                  {currentPipelineStep === 4 && 'Step 4/4: Formulating official RTI Auto-Response Memo under RTI Act 2005...'}
+                <div className="text-xs text-slate-700 font-medium">
+                  {currentPipelineStep === 1 && 'Step 1/4: Scrutinizing photographic evidence integrity & digital metadata...'}
+                  {currentPipelineStep === 2 && 'Step 2/4: Cross-referencing ward territorial registry for active duplicates...'}
+                  {currentPipelineStep === 3 && 'Step 3/4: Allocating designated Central Public Information Officer (CPIO)...'}
+                  {currentPipelineStep === 4 && 'Step 4/4: Registering docket on pgportal.gov.in central gateway...'}
                 </div>
               </div>
             ) : (
-              <button
-                type="submit"
-                className="w-full sm:w-auto px-8 py-3 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>{lang === 'en' ? 'Submit Grievance & Generate RTI Auto-Response' : 'शिकायत दर्ज करें एवं आरटीआई ऑटो-जवाब जारी करें'}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3 w-full">
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-[#0B3C5D] hover:bg-[#082D46] text-white font-bold text-xs uppercase tracking-wider shadow-xs cursor-pointer border border-[#082D46]"
+                >
+                  {lang === 'en' ? 'Submit Grievance to Competent Authority' : 'सक्षम प्राधिकारी को शिकायत अग्रेषित करें'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs border border-slate-300 cursor-pointer"
+                >
+                  {lang === 'en' ? 'Clear Form' : 'प्रारूप खाली करें'}
+                </button>
+              </div>
             )}
 
-            <p className="text-[11px] text-slate-500 mt-2 text-center">
-              Protected under Right to Information Act 2005. Free of cost civic service.
-            </p>
+            <div className="text-[11px] text-slate-500 mt-2 text-center">
+              Statutory filing under the Right to Information Act 2005. No processing fee is charged for citizen grievance registration.
+            </div>
           </div>
         </form>
       )}

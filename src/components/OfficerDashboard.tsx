@@ -1,25 +1,6 @@
 import React, { useState } from 'react';
-import { GrievanceRecord, DepartmentCode, GrievanceStatus } from '../types/grievance';
+import { GrievanceRecord, GrievanceStatus } from '../types/grievance';
 import { DEPARTMENT_INFO } from '../data/seedGrievances';
-import { 
-  Building2, 
-  Search, 
-  Filter, 
-  CheckCircle2, 
-  Clock, 
-  ShieldAlert, 
-  AlertTriangle, 
-  ArrowUpRight, 
-  FileText, 
-  UserCheck, 
-  Check, 
-  X,
-  Layers,
-  ChevronRight,
-  HardHat,
-  Eye,
-  Plus
-} from 'lucide-react';
 
 interface OfficerDashboardProps {
   grievances: GrievanceRecord[];
@@ -42,7 +23,6 @@ export const OfficerDashboard: React.FC<OfficerDashboardProps> = ({
   const [activeGrievanceDetail, setActiveGrievanceDetail] = useState<GrievanceRecord | null>(null);
   const [officerNote, setOfficerNote] = useState('');
 
-  // Department counts
   const filtered = grievances.filter((g) => {
     if (selectedDept !== 'ALL' && g.departmentCode !== selectedDept) return false;
     if (statusFilter === 'CRITICAL' && g.severity !== 'CRITICAL') return false;
@@ -85,373 +65,308 @@ export const OfficerDashboard: React.FC<OfficerDashboardProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 space-y-6">
-      {/* Header Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-blue-900" />
-            <h2 className="text-xl font-bold text-slate-900">
-              {lang === 'en' ? 'Central PIO & Department Redressal Desk' : 'केंद्रीय पीआईओ एवं विभागीय निवारण डेस्क'}
+    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 space-y-6 font-sans">
+      {/* 1. Official Header Banner */}
+      <div className="bg-white border-t-4 border-t-[#0B3C5D] border-x border-b border-slate-300 shadow-xs p-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+              GOVERNMENT OF INDIA • DEPARTMENT OF ADMINISTRATIVE REFORMS & PUBLIC GRIEVANCES
+            </div>
+            <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
+              {lang === 'en' 
+                ? 'Central Public Information Officer (CPIO) & Executive Engineer Redressal Console' 
+                : 'केंद्रीय लोक सूचना अधिकारी (सीपीआईओ) एवं कार्यपालक अभियंता डेस्क'}
             </h2>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Integrated CPIO dispatch console under Right to Information Act 2005. Manage citizen dockets, verify AI visual forensics, and dispatch statutory action notices.
-          </p>
-        </div>
-
-        {/* Quick status counters */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <div className="bg-rose-50 border border-rose-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-600" />
-            <div>
-              <span className="font-bold text-rose-900">{criticalCount}</span>
-              <span className="text-rose-700 text-[11px] ml-1">Critical (48h SLA)</span>
+            <div className="text-xs text-slate-600 mt-0.5">
+              Statutory Nodal Processing Desk under Right to Information Act, 2005 (Section 6 & 7 Compliance)
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-600" />
-            <div>
-              <span className="font-bold text-amber-900">{suspiciousCount}</span>
-              <span className="text-amber-700 text-[11px] ml-1">Flagged Photos</span>
+          {/* Quick Status Counters */}
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <div className="bg-[#FFF2F2] border border-[#E57373] px-3 py-1 text-slate-900 font-bold">
+              Critical (48h SLA): <span className="text-[#B71C1C]">{criticalCount}</span>
             </div>
-          </div>
-
-          <div className="bg-purple-50 border border-purple-200 rounded-lg px-3 py-1.5 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-purple-600" />
-            <div>
-              <span className="font-bold text-purple-900">{mergedCount}</span>
-              <span className="text-purple-700 text-[11px] ml-1">Merged Duplicates</span>
+            <div className="bg-[#FFFDF2] border border-[#E6D8A8] px-3 py-1 text-slate-900 font-bold">
+              Evidence Inquiries: <span className="text-[#8A5A00]">{suspiciousCount}</span>
+            </div>
+            <div className="bg-[#EBF7EE] border border-[#138808] px-3 py-1 text-slate-900 font-bold">
+              Closed (ATR Certified): <span className="text-[#138808]">{resolvedCount}</span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-3">
-        {/* Department tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-none">
+        {/* 2. Department Switcher */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-3 text-xs">
+          <span className="font-semibold text-slate-700 mr-1">Select Ministry / Body:</span>
           <button
+            type="button"
             onClick={() => setSelectedDept('ALL')}
-            className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer shrink-0 ${
+            className={`px-3 py-1.5 font-bold cursor-pointer border ${
               selectedDept === 'ALL'
-                ? 'bg-blue-900 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                ? 'bg-[#0B3C5D] text-white border-[#0B3C5D]'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
             }`}
           >
             All Departments ({grievances.length})
           </button>
-
           {Object.keys(DEPARTMENT_INFO).map((dCode) => {
-            const info = DEPARTMENT_INFO[dCode];
             const count = grievances.filter((g) => g.departmentCode === dCode).length;
             return (
               <button
                 key={dCode}
+                type="button"
                 onClick={() => setSelectedDept(dCode)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer shrink-0 flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 font-bold cursor-pointer border ${
                   selectedDept === dCode
-                    ? 'bg-blue-900 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-[#0B3C5D] text-white border-[#0B3C5D]'
+                    : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
                 }`}
               >
-                <span>{dCode}</span>
-                <span className="text-[10px] opacity-75 font-mono">({count})</span>
+                {dCode} ({count})
               </button>
             );
           })}
         </div>
-
-        {/* Status filters & Search */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-slate-100">
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto text-xs">
-            <span className="text-slate-400 text-xs hidden md:inline">Status:</span>
-            {[
-              { id: 'ALL', label: 'All Items' },
-              { id: 'PENDING', label: 'Pending Action' },
-              { id: 'CRITICAL', label: 'Critical Life Risk' },
-              { id: 'SUSPICIOUS', label: 'Flagged / Tampered' },
-              { id: 'MERGED', label: 'Merged Duplicates' },
-              { id: 'RESOLVED', label: 'Resolved' },
-            ].map((st) => (
-              <button
-                key={st.id}
-                onClick={() => setStatusFilter(st.id)}
-                className={`px-2.5 py-1 rounded-md text-xs font-medium cursor-pointer transition-colors ${
-                  statusFilter === st.id
-                    ? 'bg-slate-800 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {st.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter by docket, address, issue..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600"
-            />
-          </div>
-        </div>
       </div>
 
-      {/* Grievance Table / Cards */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase text-[10px] tracking-wider">
-              <tr>
-                <th className="py-3 px-4">Docket & Date</th>
-                <th className="py-3 px-4">Grievance Issue & Location</th>
-                <th className="py-3 px-4">Department & Sub-Category</th>
-                <th className="py-3 px-4">AI Forensics</th>
-                <th className="py-3 px-4">SLA / Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filtered.map((g) => (
-                <tr 
-                  key={g.id} 
-                  className={`hover:bg-slate-50/80 transition-colors ${
-                    activeGrievanceDetail?.id === g.id ? 'bg-blue-50/40' : ''
-                  }`}
-                >
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <div className="font-mono font-bold text-blue-900">{g.id}</div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">
-                      {new Date(g.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+      {/* 3. Filter and Search Bar */}
+      <div className="bg-white border border-slate-300 shadow-xs p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1 text-xs">
+          <span className="font-semibold text-slate-700 mr-1">Status:</span>
+          {[
+            { id: 'ALL', label: 'All Dockets' },
+            { id: 'PENDING', label: 'Pending Action' },
+            { id: 'CRITICAL', label: 'Critical Life Risk' },
+            { id: 'SUSPICIOUS', label: 'Evidence Scrutiny' },
+            { id: 'MERGED', label: 'Merged Duplicates' },
+            { id: 'RESOLVED', label: 'Closed / Resolved' },
+          ].map((st) => (
+            <button
+              key={st.id}
+              type="button"
+              onClick={() => setStatusFilter(st.id)}
+              className={`px-2.5 py-1 text-xs font-semibold cursor-pointer border ${
+                statusFilter === st.id
+                  ? 'bg-slate-800 text-white border-slate-800'
+                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+              }`}
+            >
+              {st.label}
+            </button>
+          ))}
+        </div>
+
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Filter by docket, address, citizen name..."
+          className="px-3 py-1.5 text-xs border border-slate-300 w-full md:w-72 focus:outline-none focus:border-[#0B3C5D]"
+        />
+      </div>
+
+      {/* 4. Official Departmental Desk Table */}
+      <div className="bg-white border border-slate-300 shadow-xs overflow-x-auto">
+        <table className="w-full text-xs text-left border-collapse">
+          <thead className="bg-[#0B3C5D] text-white font-bold uppercase text-[11px] tracking-wider">
+            <tr>
+              <th className="py-3 px-3 border-r border-[#082D46]">Docket / Date</th>
+              <th className="py-3 px-3 border-r border-[#082D46]">Grievance Subject & Ward</th>
+              <th className="py-3 px-3 border-r border-[#082D46]">Department</th>
+              <th className="py-3 px-3 border-r border-[#082D46]">Statutory SLA</th>
+              <th className="py-3 px-3 border-r border-[#082D46]">Evidence Integrity</th>
+              <th className="py-3 px-3 border-r border-[#082D46]">Current Status</th>
+              <th className="py-3 px-3 text-center">Officer Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {filtered.map((g, idx) => {
+              const isSelected = activeGrievanceDetail?.id === g.id;
+              const isSolved = g.status === 'RESOLVED';
+              const isCrewOnSite = g.governmentDispatch?.transmissionStatus === 'CREW_ON_SITE' || g.status === 'FIELD_WORK_DISPATCHED';
+
+              return (
+                <tr key={g.id} className={isSelected ? 'bg-amber-50/70' : idx % 2 === 0 ? 'bg-white hover:bg-slate-50' : 'bg-slate-50/50 hover:bg-slate-100/60'}>
+                  <td className="py-3 px-3 align-top border-r border-slate-200 font-mono">
+                    <div className="font-bold text-[#0B3C5D]">{g.id}</div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">
+                      {new Date(g.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </div>
                   </td>
 
-                  <td className="py-3 px-4 max-w-xs">
-                    <div className="font-semibold text-slate-900 line-clamp-1">{g.title}</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{g.location.address}</div>
+                  <td className="py-3 px-3 align-top border-r border-slate-200 max-w-xs">
+                    <div className="font-bold text-slate-900 line-clamp-1">{g.title}</div>
+                    <div className="text-[11px] text-slate-600 mt-0.5 line-clamp-1">
+                      {g.location.address}, {g.location.wardOrSector}
+                    </div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">
+                      Applicant: <strong>{g.citizenName}</strong>
+                    </div>
                   </td>
 
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="font-bold text-slate-800">{g.departmentCode}</span>
-                    <div className="text-[10px] text-slate-500">{g.subCategory}</div>
+                  <td className="py-3 px-3 align-top border-r border-slate-200 font-bold text-slate-800">
+                    <div>{g.departmentCode}</div>
+                    <div className="text-[10px] text-slate-500 font-normal">{g.subCategory}</div>
                   </td>
 
-                  <td className="py-3 px-4 whitespace-nowrap">
+                  <td className="py-3 px-3 align-top border-r border-slate-200">
+                    <div className="font-bold text-slate-900">{g.statutorySlaDays} Days</div>
+                    <div className="text-[10px] text-slate-500">
+                      {g.severity === 'CRITICAL' ? <span className="text-red-700 font-bold">Sec 7(1) 48h Life Risk</span> : 'Sec 6(1) Regular'}
+                    </div>
+                  </td>
+
+                  <td className="py-3 px-3 align-top border-r border-slate-200">
                     {g.imageForensics.isManipulated ? (
-                      <span className="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 w-fit">
-                        <AlertTriangle className="w-3 h-3 text-rose-600" />
-                        SUSPICIOUS ({g.imageForensics.manipulationConfidenceScore}%)
+                      <span className="bg-[#FFF2F2] border border-[#E57373] text-[#B71C1C] px-1.5 py-0.5 font-bold text-[10px]">
+                        EVIDENCE TAMPER FLAG ({g.imageForensics.manipulationConfidenceScore}%)
                       </span>
                     ) : (
-                      <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 w-fit">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                        AUTHENTIC
-                      </span>
-                    )}
-                    {g.duplicateDetection.isDuplicateCandidate && (
-                      <span className="text-[10px] font-semibold text-purple-700 block mt-0.5">
-                        Duplicate Candidate
+                      <span className="bg-[#EBF7EE] border border-[#138808] text-[#138808] px-1.5 py-0.5 font-bold text-[10px]">
+                        VERIFIED SEC 65B
                       </span>
                     )}
                   </td>
 
-                  <td className="py-3 px-4 whitespace-nowrap">
-                    <div className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${
-                        g.status === 'RESOLVED'
-                          ? 'bg-emerald-500'
-                          : g.severity === 'CRITICAL'
-                          ? 'bg-rose-500 animate-pulse'
-                          : 'bg-blue-500'
-                      }`}></span>
-                      <span className="font-medium text-slate-800">{g.status.replace(/_/g, ' ')}</span>
-                    </div>
-                    <div className="text-[10px] text-amber-700 font-mono mt-0.5">
-                      SLA: {g.statutorySlaDays} Days
-                    </div>
+                  <td className="py-3 px-3 align-top border-r border-slate-200">
+                    {isSolved ? (
+                      <span className="bg-[#EBF7EE] border border-[#138808] text-[#138808] px-2 py-0.5 font-bold text-[10px] block text-center">
+                        RESOLVED (ATR FILED)
+                      </span>
+                    ) : isCrewOnSite ? (
+                      <span className="bg-blue-50 border border-blue-400 text-blue-900 px-2 py-0.5 font-bold text-[10px] block text-center">
+                        CREW DISPATCHED
+                      </span>
+                    ) : (
+                      <span className="bg-slate-100 border border-slate-300 text-slate-800 px-2 py-0.5 font-bold text-[10px] block text-center">
+                        UNDER SCRUTINY
+                      </span>
+                    )}
                   </td>
 
-                  <td className="py-3 px-4 text-right whitespace-nowrap space-x-1">
+                  <td className="py-3 px-3 align-top text-center space-y-1 whitespace-nowrap">
                     <button
+                      type="button"
                       onClick={() => setActiveGrievanceDetail(g)}
-                      className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium transition-colors cursor-pointer"
+                      className="w-full px-2.5 py-1 bg-[#0B3C5D] hover:bg-[#082D46] text-white text-[11px] font-semibold cursor-pointer block text-center"
                     >
-                      Inspect
+                      Process Docket
                     </button>
-
                     <button
+                      type="button"
                       onClick={() => onOpenRtiModal(g)}
-                      className="px-2.5 py-1 bg-blue-900 hover:bg-blue-800 text-white rounded text-xs font-semibold transition-colors cursor-pointer"
-                      title="View Official Statutory Memo"
+                      className="w-full px-2 py-0.5 bg-white hover:bg-slate-100 border border-slate-400 text-slate-800 text-[10px] font-semibold cursor-pointer block text-center"
                     >
                       RTI Memo
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {filtered.length === 0 && (
-            <div className="p-8 text-center text-slate-500 text-xs">
-              No grievance records found matching your filter criteria.
-            </div>
-          )}
-        </div>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
-      {/* DETAIL INSPECTION DRAWER / MODAL */}
+      {/* 5. Officer Action Taken Report (ATR) Processing Modal / Panel */}
       {activeGrievanceDetail && (
-        <div className="bg-white border-2 border-blue-900 rounded-2xl p-6 shadow-xl space-y-6 animate-in fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+        <div className="bg-white border-2 border-[#0B3C5D] shadow-md p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                  {activeGrievanceDetail.id}
-                </span>
-                <span className="text-xs font-bold text-slate-600">
-                  {activeGrievanceDetail.departmentName}
-                </span>
+              <div className="text-xs font-bold uppercase tracking-wider text-[#0B3C5D]">
+                OFFICIAL ACTION TAKEN REPORT (ATR) FILING CONSOLE
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-1">
-                {activeGrievanceDetail.title}
+              <h3 className="text-base font-bold text-slate-900 font-serif mt-0.5">
+                Docket #{activeGrievanceDetail.id}: {activeGrievanceDetail.title}
               </h3>
+              <div className="text-xs text-slate-600">
+                Department: <strong>{activeGrievanceDetail.departmentName}</strong> • CPIO: <strong>{activeGrievanceDetail.rtiResponse.designatedPio.name}</strong>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onInspectForensics(activeGrievanceDetail.id)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>Forensics Sandbox</span>
-              </button>
-
-              <button
-                onClick={() => onOpenRtiModal(activeGrievanceDetail)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>View RTI Notice</span>
-              </button>
-
-              <button
-                onClick={() => setActiveGrievanceDetail(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setActiveGrievanceDetail(null)}
+              className="px-3 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-bold cursor-pointer self-start sm:self-auto"
+            >
+              Close Console
+            </button>
           </div>
 
-          {/* Description & Action Plan */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-            <div className="space-y-3">
-              <div>
-                <strong className="text-slate-700">Citizen Description:</strong>
-                <p className="text-slate-600 mt-1 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">
-                  {activeGrievanceDetail.description}
-                </p>
-              </div>
-
-              <div>
-                <strong className="text-slate-700">Location & Coordinates:</strong>
-                <div className="text-slate-600 mt-1">
-                  {activeGrievanceDetail.location.address}, {activeGrievanceDetail.location.wardOrSector || ''}, {activeGrievanceDetail.location.district} (PIN: {activeGrievanceDetail.location.pinCode})
-                </div>
-                <div className="font-mono text-[11px] text-slate-500 mt-0.5">
-                  GPS: {activeGrievanceDetail.location.lat}° N, {activeGrievanceDetail.location.lng}° E
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2 text-xs">
+              <div className="bg-slate-50 border border-slate-300 p-3">
+                <div className="font-bold text-slate-800 mb-1">Citizen Statement:</div>
+                <p className="text-slate-700 leading-relaxed">{activeGrievanceDetail.description}</p>
+                <div className="mt-2 pt-2 border-t border-slate-200 text-slate-600">
+                  <strong>Location:</strong> {activeGrievanceDetail.location.address}, {activeGrievanceDetail.location.wardOrSector}, PIN: {activeGrievanceDetail.location.pinCode}
                 </div>
               </div>
 
-              <div>
-                <strong className="text-slate-700">Applicant:</strong>
-                <div className="text-slate-600 mt-0.5">
-                  {activeGrievanceDetail.citizenName} ({activeGrievanceDetail.citizenPhone})
+              {activeGrievanceDetail.imageUrl && (
+                <div className="border border-slate-300 p-2 bg-slate-100">
+                  <div className="text-[11px] font-bold text-slate-700 mb-1">Attached Civic Evidence:</div>
+                  <img src={activeGrievanceDetail.imageUrl} alt="Attached Civic Evidence" className="w-full h-40 object-cover border border-slate-300" />
+                  <button
+                    type="button"
+                    onClick={() => onInspectForensics(activeGrievanceDetail.id)}
+                    className="mt-2 w-full py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold cursor-pointer"
+                  >
+                    Open Digital Evidence & Vigilance Audit Wing
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="space-y-3">
-              <div>
-                <strong className="text-slate-700">Department Action Directives (AI Generated):</strong>
-                <ol className="list-decimal list-inside space-y-1 mt-1 text-slate-700 bg-blue-50/50 p-3 rounded-lg border border-blue-200">
-                  {activeGrievanceDetail.actionPlanSteps.map((st, idx) => (
-                    <li key={idx}>{st}</li>
-                  ))}
-                </ol>
-              </div>
-
-              <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg">
-                <div className="font-semibold text-slate-800 mb-1">AI Image Verification:</div>
-                <div className="text-slate-600">Rating: <strong>{activeGrievanceDetail.imageForensics.authenticityRating}</strong></div>
-                <div className="text-slate-600">Manipulation Risk Score: <strong>{activeGrievanceDetail.imageForensics.manipulationConfidenceScore}%</strong></div>
-                <div className="text-[11px] text-slate-500 mt-1">
-                  Summary: {activeGrievanceDetail.imageForensics.visualSummary}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Officer Redressal Actions */}
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wide">
-              Official CPIO Administrative Action
-            </h4>
-
-            <div>
-              <label className="block text-xs text-slate-600 mb-1 font-medium">
-                Official ATR Note / Field Update:
+              <label className="block text-xs font-bold text-slate-800">
+                Official Action Taken Report (ATR) / Departmental Note:
               </label>
-              <input
-                type="text"
+              <textarea
+                rows={4}
                 value={officerNote}
                 onChange={(e) => setOfficerNote(e.target.value)}
-                placeholder="e.g. Field Engineer Team #4 dispatched with road roller & bitumen mix..."
-                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600"
+                placeholder="Enter official departmental action remarks (e.g. 'Site inspected by Assistant Engineer. Road cavity filled with dense bituminous macadam. Quality test satisfactory. ATR submitted to CPGRAMS.')"
+                className="w-full px-3 py-2 text-xs border border-slate-300 rounded-none bg-white focus:outline-none focus:border-[#0B3C5D]"
               />
-            </div>
 
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              <button
-                onClick={() => handleStatusChange('FIELD_WORK_DISPATCHED')}
-                className="px-3.5 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                Dispatch Field Work Force
-              </button>
+              <div className="text-xs font-bold text-slate-800 pt-1">
+                Update Statutory Docket Status:
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange('FIELD_WORK_DISPATCHED')}
+                  className="py-2 px-3 bg-blue-900 hover:bg-blue-800 text-white font-semibold cursor-pointer border border-blue-950"
+                >
+                  Mobilize Field Crew
+                </button>
 
-              <button
-                onClick={() => handleStatusChange('INVESTIGATING')}
-                className="px-3.5 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                Mark Site Inspection Active
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange('INVESTIGATING')}
+                  className="py-2 px-3 bg-indigo-900 hover:bg-indigo-800 text-white font-semibold cursor-pointer border border-indigo-950"
+                >
+                  Order Zonal Inquiry
+                </button>
 
-              <button
-                onClick={() => handleStatusChange('RESOLVED')}
-                className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                Mark Redressed & Close Docket
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange('RESOLVED')}
+                  className="py-2 px-3 bg-[#138808] hover:bg-[#0f6b06] text-white font-semibold cursor-pointer border border-[#0f6b06]"
+                >
+                  Certify Redressal (File ATR)
+                </button>
 
-              <button
-                onClick={() => handleStatusChange('MERGED_DUPLICATE')}
-                className="px-3.5 py-1.5 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                Merge with Cluster
-              </button>
-
-              <button
-                onClick={() => handleStatusChange('REJECTED_MANIPULATED')}
-                className="px-3.5 py-1.5 bg-rose-700 hover:bg-rose-800 text-white rounded-lg text-xs font-semibold cursor-pointer"
-              >
-                Reject for Fraud / Tampering
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleStatusChange('REJECTED_MANIPULATED')}
+                  className="py-2 px-3 bg-[#B71C1C] hover:bg-[#8b1515] text-white font-semibold cursor-pointer border border-[#8b1515]"
+                >
+                  Reject (Evidence Tampered)
+                </button>
+              </div>
             </div>
           </div>
         </div>
