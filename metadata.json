@@ -1,0 +1,8 @@
+{
+  "name": "JanSamadhan AI - Government Grievance & RTI Auto-Responder",
+  "description": "AI-powered civic grievance portal and automated RTI auto-responder for government departments with deep visual forensics, duplicate detection, and intelligent department dispatch.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
