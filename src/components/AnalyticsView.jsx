@@ -1,24 +1,15 @@
-import React from 'react';
-import { GrievanceRecord } from '../types/grievance';
-import { DEPARTMENT_INFO } from '../data/seedGrievances';
+// Citizen Charter & SLA Compliance Analytics Dashboard.
 
-interface AnalyticsViewProps {
-  grievances: GrievanceRecord[];
-  lang: 'en' | 'hi';
-}
-
-export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ grievances, lang }) => {
+import { DEPARTMENT_INFO } from "../data/seedGrievances";
+export const AnalyticsView = ({ grievances, lang }) => {
   const total = grievances.length;
-  const resolved = grievances.filter((g) => g.status === 'RESOLVED').length;
-  const inField = grievances.filter((g) => g.status === 'FIELD_WORK_DISPATCHED').length;
-  const critical = grievances.filter((g) => g.severity === 'CRITICAL').length;
+  const resolved = grievances.filter((g) => g.status === "RESOLVED").length;
+  const inField = grievances.filter((g) => g.status === "FIELD_WORK_DISPATCHED").length;
+  const critical = grievances.filter((g) => g.severity === "CRITICAL").length;
   const manipulated = grievances.filter((g) => g.imageForensics.isManipulated).length;
-  const duplicates = grievances.filter((g) => g.status === 'MERGED_DUPLICATE').length;
-
-  const resolutionRate = total > 0 ? Math.round(((resolved + inField) / total) * 100) : 0;
-
-  return (
-    <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 space-y-6 font-sans">
+  const duplicates = grievances.filter((g) => g.status === "MERGED_DUPLICATE").length;
+  const resolutionRate = total > 0 ? Math.round((resolved + inField) / total * 100) : 0;
+  return <div className="max-w-6xl mx-auto py-6 px-4 sm:px-6 space-y-6 font-sans">
       {/* 1. Official Header */}
       <div className="bg-white border-t-4 border-t-[#0B3C5D] border-x border-b border-slate-300 shadow-xs p-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-3">
@@ -27,9 +18,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ grievances, lang }
               GOVERNMENT OF INDIA • PROACTIVE STATUTORY DISCLOSURE (SECTION 4(1)(B) RTI ACT 2005)
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
-              {lang === 'en' 
-                ? 'Citizen’s Charter & Departmental Redressal Performance Audit' 
-                : 'नागरिक अधिकार पत्र एवं विभागीय निवारण निष्पादन लेखापरीक्षा'}
+              {lang === "en" ? "Citizen’s Charter & Departmental Redressal Performance Audit" : "नागरिक अधिकार पत्र एवं विभागीय निवारण निष्पादन लेखापरीक्षा"}
             </h2>
             <div className="text-xs text-slate-600 mt-0.5">
               Annual and Monthly Grievance Redressal Compliance Metrics under CPGRAMS Guidelines
@@ -89,16 +78,13 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ grievances, lang }
             </thead>
             <tbody className="divide-y divide-slate-200">
               {Object.keys(DEPARTMENT_INFO).map((dCode, idx) => {
-                const info = DEPARTMENT_INFO[dCode];
-                const deptGrievances = grievances.filter((g) => g.departmentCode === dCode);
-                const deptTotal = deptGrievances.length;
-                const deptResolved = deptGrievances.filter((g) => g.status === 'RESOLVED').length;
-                const ratio = deptTotal > 0 ? Math.round((deptResolved / deptTotal) * 100) : 100;
-
-                const deptSla = deptGrievances[0]?.statutorySlaDays || (dCode === 'POWER_DISCOM' ? 2 : dCode === 'PWD' ? 3 : 7);
-
-                return (
-                  <tr key={dCode} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}>
+    const info = DEPARTMENT_INFO[dCode];
+    const deptGrievances = grievances.filter((g) => g.departmentCode === dCode);
+    const deptTotal = deptGrievances.length;
+    const deptResolved = deptGrievances.filter((g) => g.status === "RESOLVED").length;
+    const ratio = deptTotal > 0 ? Math.round(deptResolved / deptTotal * 100) : 100;
+    const deptSla = deptGrievances[0]?.statutorySlaDays || (dCode === "POWER_DISCOM" ? 2 : dCode === "PWD" ? 3 : 7);
+    return <tr key={dCode} className={idx % 2 === 0 ? "bg-white" : "bg-slate-50/50"}>
                     <td className="py-2.5 px-3 align-top border-r border-slate-200 font-bold text-slate-900">
                       {info.name}
                     </td>
@@ -115,17 +101,15 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ grievances, lang }
                       {deptResolved}
                     </td>
                     <td className="py-2.5 px-3 align-top font-bold">
-                      <span className={ratio >= 50 ? 'text-[#138808]' : 'text-amber-700'}>
+                      <span className={ratio >= 50 ? "text-[#138808]" : "text-amber-700"}>
                         {ratio}%
                       </span>
                     </td>
-                  </tr>
-                );
-              })}
+                  </tr>;
+  })}
             </tbody>
           </table>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };

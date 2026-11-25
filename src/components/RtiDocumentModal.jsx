@@ -1,28 +1,17 @@
-import React from 'react';
-import { GrievanceRecord } from '../types/grievance';
-import { AshokaEmblem } from './AshokaEmblem';
+// Printable Official RTI Act 2005 Auto-Response Notice modal.
 
-interface RtiDocumentModalProps {
-  grievance: GrievanceRecord | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const RtiDocumentModal: React.FC<RtiDocumentModalProps> = ({
+import { AshokaEmblem } from "./AshokaEmblem";
+export const RtiDocumentModal = ({
   grievance,
   isOpen,
-  onClose,
+  onClose
 }) => {
   if (!isOpen || !grievance) return null;
-
   const { rtiResponse } = grievance;
-
   const handlePrint = () => {
     window.print();
   };
-
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 flex items-center justify-center p-3 sm:p-6 font-sans">
+  return <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 flex items-center justify-center p-3 sm:p-6 font-sans">
       <div className="bg-white max-w-4xl w-full shadow-2xl overflow-hidden border border-slate-300 flex flex-col max-h-[92vh]">
         {/* Top Control Bar (Hidden during print) */}
         <div className="no-print bg-[#0B3C5D] text-white px-5 py-3 flex items-center justify-between border-b border-[#082D46] shrink-0">
@@ -34,19 +23,19 @@ export const RtiDocumentModal: React.FC<RtiDocumentModalProps> = ({
 
           <div className="flex items-center gap-2">
             <button
-              type="button"
-              onClick={handlePrint}
-              className="px-3 py-1.5 bg-[#FF9933] hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase cursor-pointer"
-            >
+    type="button"
+    onClick={handlePrint}
+    className="px-3 py-1.5 bg-[#FF9933] hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase cursor-pointer"
+  >
               Print / Save PDF
             </button>
 
             <button
-              type="button"
-              onClick={onClose}
-              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs cursor-pointer"
-              title="Close Notice"
-            >
+    type="button"
+    onClick={onClose}
+    className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs cursor-pointer"
+    title="Close Notice"
+  >
               Close [✕]
             </button>
           </div>
@@ -108,7 +97,7 @@ export const RtiDocumentModal: React.FC<RtiDocumentModalProps> = ({
               <div><strong>Designated CPIO:</strong> {rtiResponse.designatedPio.name}</div>
               <div><strong>Designation:</strong> {rtiResponse.designatedPio.designation}</div>
               <div><strong>Office Address:</strong> {rtiResponse.designatedPio.officeAddress}</div>
-              <div><strong>Official Telephone:</strong> {rtiResponse.designatedPio.phone || '011-23092471'}</div>
+              <div><strong>Official Telephone:</strong> {rtiResponse.designatedPio.phone || "011-23092471"}</div>
               <div><strong>First Appellate Authority (FAA):</strong> {rtiResponse.firstAppellateAuthority.name}, {rtiResponse.firstAppellateAuthority.designation}</div>
             </div>
 
@@ -121,11 +110,9 @@ export const RtiDocumentModal: React.FC<RtiDocumentModalProps> = ({
             </p>
 
             <ol className="list-decimal list-inside space-y-1 bg-slate-50 p-3 border border-slate-200">
-              {grievance.actionPlanSteps.map((step, idx) => (
-                <li key={idx} className="leading-relaxed">
+              {grievance.actionPlanSteps.map((step, idx) => <li key={idx} className="leading-relaxed">
                   {step}
-                </li>
-              ))}
+                </li>)}
             </ol>
 
             <p>
@@ -148,6 +135,5 @@ export const RtiDocumentModal: React.FC<RtiDocumentModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
