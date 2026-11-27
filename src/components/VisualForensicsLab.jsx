@@ -22,27 +22,29 @@ export const VisualForensicsLab = ({
               GOVERNMENT OF INDIA • DIGITAL EVIDENCE & VIGILANCE AUDIT WING
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
-              {lang === "en" ? "Section 65B Digital Evidence Verification & Deduplication Console" : "धारा 65बी डिजिटल साक्ष्य सत्यापन एवं डुप्लिकेट जांच पटल"}
+              {lang === "en" ? "Photo & Duplicate Check" : "फ़ोटो एवं डुप्लीकेट जांच"}
             </h2>
             <div className="text-xs text-slate-600 mt-0.5">
-              Statutory verification compliant with the Indian Evidence Act, 1872 & CERT-In Media Forensics Guidelines
+              Check if an uploaded complaint photo is genuine, edited, or already reported nearby.
             </div>
           </div>
 
           {/* Docket Switcher */}
           <div className="flex items-center gap-2">
-            <label className="text-xs font-semibold text-slate-700 shrink-0">Select Docket to Audit:</label>
+            <label className="text-xs font-semibold text-slate-700 shrink-0">Select Complaint:</label>
             <select
-    value={currentGrievance.id}
-    onChange={(e) => {
-      setActiveId(e.target.value);
-      onSelectGrievance(e.target.value);
-    }}
-    className="bg-white text-slate-900 text-xs px-3 py-1.5 border border-slate-300 focus:outline-none focus:border-[#0B3C5D] cursor-pointer"
-  >
-              {grievances.map((g) => <option key={g.id} value={g.id}>
-                  {g.id} ({g.departmentCode} - {g.imageForensics.isManipulated ? "FLAGGED TAMPERED" : "VERIFIED GENUINE"})
-                </option>)}
+              value={currentGrievance.id}
+              onChange={(e) => {
+                setActiveId(e.target.value);
+                onSelectGrievance(e.target.value);
+              }}
+              className="bg-white text-slate-900 text-xs px-3 py-1.5 border border-slate-300 focus:outline-none focus:border-[#0B3C5D] cursor-pointer"
+            >
+              {grievances.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.id} ({g.departmentCode} - {g.imageForensics.isManipulated ? "FLAGGED EDITED" : "GENUINE"})
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -50,57 +52,61 @@ export const VisualForensicsLab = ({
         {/* Status Callout */}
         <div className="mt-3 p-3 text-xs border border-slate-300 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <span className="font-bold text-slate-900">Current Docket: {currentGrievance.id}</span>
+            <span className="font-bold text-slate-900">Complaint: {currentGrievance.id}</span>
             <span className="text-slate-600 ml-2">({currentGrievance.title})</span>
           </div>
           <div>
-            {imageForensics.isManipulated ? <span className="bg-[#FFF2F2] border border-[#E57373] text-[#B71C1C] px-2 py-0.5 font-bold">
-                EVIDENCE SCRUTINY STATUS: TAMPER ANOMALY DETECTED
-              </span> : <span className="bg-[#EBF7EE] border border-[#138808] text-[#138808] px-2 py-0.5 font-bold">
-                EVIDENCE SCRUTINY STATUS: VERIFIED AUTHENTIC (SEC 65B)
-              </span>}
+            {imageForensics.isManipulated ? (
+              <span className="bg-[#FFF2F2] border border-[#E57373] text-[#B71C1C] px-2 py-0.5 font-bold">
+                STATUS: POSSIBLE EDITED PHOTO
+              </span>
+            ) : (
+              <span className="bg-[#EBF7EE] border border-[#138808] text-[#138808] px-2 py-0.5 font-bold">
+                STATUS: VERIFIED REAL PHOTO
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 2. Main Forensic Scrutiny Workspace */}
+      {/* 2. Main Photo Inspection Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column (7 cols): Evidence Viewer */}
+        {/* Left Column (7 cols): Photo Viewer */}
         <div className="lg:col-span-7 bg-white border border-slate-300 shadow-xs p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
             <div className="text-xs font-bold uppercase tracking-wider text-slate-800">
-              Photographic Evidence Forensic Inspection
+              Uploaded Photo Preview
             </div>
 
-            {/* Filter Tabs */}
+            {/* Simple View Mode Buttons */}
             <div className="flex items-center gap-1 text-xs">
               <button
-    type="button"
-    onClick={() => setForensicMode("ORIGINAL")}
-    className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "ORIGINAL" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
-  >
-                Original Evidence
+                type="button"
+                onClick={() => setForensicMode("ORIGINAL")}
+                className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "ORIGINAL" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Original Photo
               </button>
               <button
-    type="button"
-    onClick={() => setForensicMode("ELA")}
-    className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "ELA" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
-  >
-                ELA Compression
+                type="button"
+                onClick={() => setForensicMode("ELA")}
+                className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "ELA" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Edit Check
               </button>
               <button
-    type="button"
-    onClick={() => setForensicMode("EDGES")}
-    className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "EDGES" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
-  >
-                Edge Gradient
+                type="button"
+                onClick={() => setForensicMode("EDGES")}
+                className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "EDGES" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Edge View
               </button>
               <button
-    type="button"
-    onClick={() => setForensicMode("HEATMAP")}
-    className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "HEATMAP" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
-  >
-                Tamper Heatmap
+                type="button"
+                onClick={() => setForensicMode("HEATMAP")}
+                className={`px-2.5 py-1 font-semibold cursor-pointer border ${forensicMode === "HEATMAP" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
+              >
+                Heatmap
               </button>
             </div>
           </div>

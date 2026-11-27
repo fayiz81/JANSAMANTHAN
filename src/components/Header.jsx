@@ -150,13 +150,13 @@ export const Header = ({
         <div className="max-w-7xl mx-auto px-2 sm:px-6 flex flex-col md:flex-row md:items-center justify-between">
           {/* Main Citizen Tabs */}
           <nav className="flex space-x-1 overflow-x-auto scrollbar-none py-0" aria-label="Citizen Services">
-            {/* Tab 1: Lodge Grievance */}
+            {/* Tab 1: File Complaint */}
             <button
-    type="button"
-    onClick={() => setActiveTab("submit")}
-    className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "submit" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
-  >
-              <span>{lang === "en" ? "Lodge Grievance" : "शिकायत दर्ज करें"}</span>
+              type="button"
+              onClick={() => setActiveTab("submit")}
+              className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "submit" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
+            >
+              <span>{lang === "en" ? "File Complaint" : "शिकायत दर्ज करें"}</span>
               <span className="text-[10px] bg-amber-400 text-slate-950 px-1 py-0.2 rounded font-black">
                 FREE
               </span>
@@ -164,74 +164,78 @@ export const Header = ({
 
             {/* Tab 2: Track Status */}
             <button
-    type="button"
-    onClick={() => setActiveTab("track")}
-    className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "track" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
-  >
-              <span>{lang === "en" ? "Track Status & RTI" : "स्थिति जांचें / आरटीआई"}</span>
+              type="button"
+              onClick={() => setActiveTab("track")}
+              className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "track" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
+            >
+              <span>{lang === "en" ? "Track Status" : "स्थिति जांचें"}</span>
             </button>
 
-            {/* Tab 3: Live Govt Redressal Stream */}
+            {/* Tab 3: Live Updates */}
             <button
-    type="button"
-    onClick={() => setActiveTab("live")}
-    className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "live" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
-  >
+              type="button"
+              onClick={() => setActiveTab("live")}
+              className={`py-3 px-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap border-b-4 flex items-center gap-1.5 ${activeTab === "live" ? "border-[#FF9933] bg-[#082D46] text-amber-300" : "border-transparent text-slate-100 hover:bg-[#0e4970] hover:text-white"}`}
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{lang === "en" ? "Live Govt Feed" : "लाइव सरकारी फ़ीड"}</span>
+              <span>{lang === "en" ? "Live Updates" : "लाइव अपडेट"}</span>
             </button>
           </nav>
 
-          {/* Department & Officer Administrative Suite */}
+          {/* Admin / Department Tools */}
           <div className="flex items-center overflow-x-auto scrollbar-none py-1.5 md:py-0 border-t md:border-t-0 border-[#1B4B6E]">
             <span className="text-[10px] uppercase font-bold text-slate-300 px-2 hidden lg:inline">
-              Officer Section:
+              Admin:
             </span>
 
-            {/* Department Desk */}
+            {/* Officer Panel */}
             <button
-    type="button"
-    onClick={() => setActiveTab("officer")}
-    className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded flex items-center gap-1.5 ${activeTab === "officer" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
-    title="Central Public Information Officer Desk"
-  >
-              <span>{lang === "en" ? "CPIO Desk" : "सीपीआईओ डेस्क"}</span>
-              {pendingCount > 0 && <span className={`text-[10px] font-black px-1.5 py-0.2 rounded ${activeTab === "officer" ? "bg-slate-950 text-white" : "bg-amber-400 text-slate-950"}`}>
+              type="button"
+              onClick={() => setActiveTab("officer")}
+              className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded flex items-center gap-1.5 ${activeTab === "officer" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
+              title="Manage and update complaints"
+            >
+              <span>{lang === "en" ? "Officer Panel" : "अधिकारी पैनल"}</span>
+              {pendingCount > 0 && (
+                <span className={`text-[10px] font-black px-1.5 py-0.2 rounded ${activeTab === "officer" ? "bg-slate-950 text-white" : "bg-amber-400 text-slate-950"}`}>
                   {pendingCount}
-                </span>}
-              {criticalCount > 0 && <span className="bg-red-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded">
+                </span>
+              )}
+              {criticalCount > 0 && (
+                <span className="bg-red-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded">
                   {criticalCount}
-                </span>}
+                </span>
+              )}
             </button>
 
-            {/* Evidence Verification Wing */}
+            {/* Photo Check */}
             <button
-    type="button"
-    onClick={() => setActiveTab("forensics")}
-    className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "forensics" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
-    title="Section 65B Digital Evidence Verification"
-  >
-              {lang === "en" ? "Evidence Lab" : "साक्ष्य सत्यापन"}
+              type="button"
+              onClick={() => setActiveTab("forensics")}
+              className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "forensics" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
+              title="Check uploaded photos for edits or duplicates"
+            >
+              {lang === "en" ? "Photo Check" : "फ़ोटो जांच"}
             </button>
 
-            {/* Jurisdiction & Grounding */}
+            {/* Nearby Offices */}
             <button
-    type="button"
-    onClick={() => setActiveTab("grounding")}
-    className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "grounding" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
-    title="Territorial Jurisdiction & Municipal Grounding"
-  >
-              {lang === "en" ? "Jurisdiction" : "अधिकार क्षेत्र"}
+              type="button"
+              onClick={() => setActiveTab("grounding")}
+              className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "grounding" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
+              title="Find nearby government offices and public notices"
+            >
+              {lang === "en" ? "Nearby Offices" : "नज़दीकी कार्यालय"}
             </button>
 
-            {/* Citizen Charter & SLA */}
+            {/* Reports */}
             <button
-    type="button"
-    onClick={() => setActiveTab("analytics")}
-    className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "analytics" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
-    title="Citizen Charter & Statutory SLA Compliance"
-  >
-              {lang === "en" ? "SLA Charter" : "नागरिक चार्टर"}
+              type="button"
+              onClick={() => setActiveTab("analytics")}
+              className={`py-2 px-3 text-[11px] font-semibold transition-all cursor-pointer whitespace-nowrap rounded ${activeTab === "analytics" ? "bg-amber-400 text-slate-950 font-bold" : "text-slate-200 hover:bg-white/10"}`}
+              title="View department statistics and resolution reports"
+            >
+              {lang === "en" ? "Reports" : "रिपोर्ट"}
             </button>
           </div>
         </div>
@@ -242,25 +246,27 @@ export const Header = ({
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="font-bold text-[#8A5A00] flex items-center gap-1">
-              <span>★</span> {lang === "en" ? "Easy Citizen Lodging:" : "सरल नागरिक पंजीकरण:"}
+              <span>★</span> {lang === "en" ? "Easy Filing:" : "सरल पंजीकरण:"}
             </span>
             <span className="text-slate-700">
-              {lang === "en" ? "Report any civic defect in 3 simple steps. Auto-routed to PWD, Jal Board, Discom & Municipal Corp." : "3 सरल चरणों में किसी भी नागरिक समस्या की रिपोर्ट करें। स्वचालित रूप से संबंधित विभाग को प्रेषित।"}
+              {lang === "en"
+                ? "Report any road, water, garbage, or electricity issue in 3 simple steps. Sent automatically to the right department."
+                : "3 सरल चरणों में सड़क, पानी, कचरा या बिजली की समस्या दर्ज करें। स्वतः सही विभाग को भेजा जाता है।"}
             </span>
           </div>
 
           <div className="flex items-center gap-3 shrink-0 text-[11px]">
             <span className="text-slate-600">
-              {lang === "en" ? "Life/Safety SLA: " : "जीवन/सुरक्षा गारंटी: "}
-              <strong className="text-red-700">48 Hours (RTI Sec 7)</strong>
+              {lang === "en" ? "Emergency Action: " : "आपातकालीन कार्रवाई: "}
+              <strong className="text-red-700">Within 48 Hours</strong>
             </span>
             <span className="text-slate-400">•</span>
             <button
-    type="button"
-    onClick={() => setActiveTab("track")}
-    className="text-[#0B3C5D] font-bold underline hover:text-[#082D46] cursor-pointer"
-  >
-              {lang === "en" ? "Track Existing Docket" : "पुरानी शिकायत जांचें"}
+              type="button"
+              onClick={() => setActiveTab("track")}
+              className="text-[#0B3C5D] font-bold underline hover:text-[#082D46] cursor-pointer"
+            >
+              {lang === "en" ? "Track My Complaint" : "मेरी शिकायत जांचें"}
             </button>
           </div>
         </div>

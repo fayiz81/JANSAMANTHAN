@@ -60,7 +60,7 @@ export const OfficerDashboard = ({
               GOVERNMENT OF INDIA • DEPARTMENT OF ADMINISTRATIVE REFORMS & PUBLIC GRIEVANCES
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
-              {lang === "en" ? "Central Public Information Officer (CPIO) & Executive Engineer Redressal Console" : "केंद्रीय लोक सूचना अधिकारी (सीपीआईओ) एवं कार्यपालक अभियंता डेस्क"}
+              {lang === "en" ? "Department Officer Panel" : "विभागीय अधिकारी पैनल"}
             </h2>
             <div className="text-xs text-slate-600 mt-0.5">
               Statutory Nodal Processing Desk under Right to Information Act, 2005 (Section 6 & 7 Compliance)
@@ -110,12 +110,12 @@ export const OfficerDashboard = ({
         <div className="flex flex-wrap items-center gap-1 text-xs">
           <span className="font-semibold text-slate-700 mr-1">Status:</span>
           {[
-    { id: "ALL", label: "All Dockets" },
-    { id: "PENDING", label: "Pending Action" },
-    { id: "CRITICAL", label: "Critical Life Risk" },
-    { id: "SUSPICIOUS", label: "Evidence Scrutiny" },
-    { id: "MERGED", label: "Merged Duplicates" },
-    { id: "RESOLVED", label: "Closed / Resolved" }
+    { id: "ALL", label: "All" },
+    { id: "PENDING", label: "Pending" },
+    { id: "CRITICAL", label: "Urgent" },
+    { id: "SUSPICIOUS", label: "Edited Photo" },
+    { id: "MERGED", label: "Duplicate" },
+    { id: "RESOLVED", label: "Solved" }
   ].map((st) => <button
     key={st.id}
     type="button"
@@ -266,7 +266,7 @@ export const OfficerDashboard = ({
     onClick={() => onInspectForensics(activeGrievanceDetail.id)}
     className="mt-2 w-full py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold cursor-pointer"
   >
-                    Open Digital Evidence & Vigilance Audit Wing
+                    Open Photo & Duplicate Check
                   </button>
                 </div>}
             </div>

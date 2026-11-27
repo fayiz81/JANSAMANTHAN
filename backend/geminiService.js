@@ -182,7 +182,7 @@ TASKS:
   // Timeout after 12 seconds so the form never hangs
   const response = await Promise.race([
     ai.models.generateContent({
-      model: "gemini-3.8-flash",
+      model: "gemini-4-hydrogen",
       contents: contentsParts,
       config: {
         systemInstruction:
@@ -206,7 +206,7 @@ export async function searchNearbyOfficesWithAI(ai, { lat, lng, address, query }
     `Find the nearest PWD zonal office, municipal ward office, Delhi Jal Board depot, or civic response centers near: ${address || "New Delhi, India"}.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
+    model: "gemini-4-hydrogen",
     contents: prompt,
     config: {
       tools: [{ googleMaps: {} }],
@@ -239,7 +239,7 @@ export async function searchNearbyOfficesWithAI(ai, { lat, lng, address, query }
  */
 export async function searchGovWebWithAI(ai, prompt) {
   const response = await ai.models.generateContent({
-    model: "gemini-3.8-flash",
+    model: "gemini-4-hydrogen",
     contents: prompt,
     config: {
       tools: [{ googleSearch: {} }],

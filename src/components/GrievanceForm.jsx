@@ -8,6 +8,7 @@ import {
   DEMO_SCENARIOS,
   SAMPLE_EVIDENCE_PHOTOS,
 } from "../data/presets";
+import { analyzeComplaintLocally } from "../utils/localAnalyzer";
 import { ReceiptSlip } from "./ReceiptSlip";
 
 // Helper function to build the full grievance record object from the API response
@@ -305,6 +306,8 @@ export function GrievanceForm({
     const timer2 = setTimeout(() => setCurrentPipelineStep(3), 1500);
     const timer3 = setTimeout(() => setCurrentPipelineStep(4), 2300);
 
+    let aiData = null;
+
     try {
       const response = await fetch("/api/analyze-grievance", {
         method: "POST",
@@ -327,15 +330,30 @@ export function GrievanceForm({
         }),
       });
 
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
+      if (response.ok) {
+        const json = await response.json();
+        if (json?.data) {
+          aiData = json.data;
+        }
+      }
+    } catch {
+      // Backend API unreachable (e.g. static preview) — fall back to local analyzer below
+    }
 
-      if (!response.ok) {
-        throw new Error(`Server returned status ${response.status}`);
+    clearTimeout(timer1);
+    clearTimeout(timer2);
+    clearTimeout(timer3);
+
+    try {
+      if (!aiData) {
+        aiData = analyzeComplaintLocally({
+          title,
+          description,
+          imageBase64: imagePreview,
+          existingComplaints,
+        });
       }
 
-      const json = await response.json();
       const newRecord = buildGrievanceRecord({
         title,
         description,
@@ -346,13 +364,13 @@ export function GrievanceForm({
         isAnonymous,
         directGovDispatch,
         imagePreview,
-        aiData: json.data,
+        aiData,
       });
 
       onGrievanceCreated(newRecord);
       setSubmissionResult(newRecord);
     } catch (err) {
-      setErrorMessage(`Failed to process grievance transmission: ${err.message}. Please retry.`);
+      setErrorMessage(`Could not submit complaint: ${err.message}. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -379,11 +397,11 @@ export function GrievanceForm({
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif">
               {lang === "en"
-                ? "CPGRAMS Citizen Grievance & Statutory RTI Redressal Form"
-                : "सीपीजीआरएएमएस नागरिक लोक शिकायत एवं आरटीआई निवारण प्रारूप"}
+                ? "File a Public Complaint & RTI Request"
+                : "लोक शिकायत एवं आरटीआई आवेदन दर्ज करें"}
             </h2>
             <div className="text-xs text-slate-600 mt-0.5">
-              Electronic Lodging under Rule 3 of the Central Public Grievance Redressal Mechanism &amp; Right to Information Act, 2005
+              Submit your civic complaint online under CPGRAMS &amp; Right to Information Act, 2005
             </div>
           </div>
 
@@ -539,7 +557,7 @@ export function GrievanceForm({
               </div>
             ) : (
               <div className="bg-[#FFFDF2] border border-[#E6D8A8] p-3 text-xs text-slate-800">
-                <strong>Confidential / Whistleblower Mode Active:</strong> Your personal identity will be withheld from the public grievance gazette. Statutory inquiries will proceed under the designated CPGRAMS Docket Number.
+                <strong>Confidential Mode Active:</strong> Your personal identity will be hidden from the public complaint list. Action will continue using your CPGRAMS Docket Number.
               </div>
             )}
           </div>
@@ -800,7 +818,7 @@ export function GrievanceForm({
             {isSubmitting ? (
               <div className="w-full max-w-lg bg-slate-50 border border-slate-300 p-4 text-center space-y-3">
                 <div className="text-sm font-bold text-[#0B3C5D]">
-                  Transmitting to National CPGRAMS Switch &amp; Conducting Statutory Scrutiny...
+                  Submitting Your Complaint &amp; Assigning Department...
                 </div>
 
                 <div className="w-full bg-slate-200 h-2">
@@ -812,13 +830,13 @@ export function GrievanceForm({
 
                 <div className="text-xs text-slate-700 font-medium">
                   {currentPipelineStep === 1 &&
-                    "Step 1/4: Scrutinizing photographic evidence integrity & digital metadata..."}
+                    "Step 1/4: Checking uploaded photo..."}
                   {currentPipelineStep === 2 &&
-                    "Step 2/4: Cross-referencing ward territorial registry for active duplicates..."}
+                    "Step 2/4: Checking for nearby duplicate complaints..."}
                   {currentPipelineStep === 3 &&
-                    "Step 3/4: Allocating designated Central Public Information Officer (CPIO)..."}
+                    "Step 3/4: Assigning the right department & officer..."}
                   {currentPipelineStep === 4 &&
-                    "Step 4/4: Registering docket on pgportal.gov.in central gateway..."}
+                    "Step 4/4: Saving complaint & generating receipt..."}
                 </div>
               </div>
             ) : (

@@ -18,7 +18,7 @@ export const AnalyticsView = ({ grievances, lang }) => {
               GOVERNMENT OF INDIA • PROACTIVE STATUTORY DISCLOSURE (SECTION 4(1)(B) RTI ACT 2005)
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
-              {lang === "en" ? "Citizen’s Charter & Departmental Redressal Performance Audit" : "नागरिक अधिकार पत्र एवं विभागीय निवारण निष्पादन लेखापरीक्षा"}
+              {lang === "en" ? "Department Reports & Stats" : "विभागीय रिपोर्ट एवं आंकड़े"}
             </h2>
             <div className="text-xs text-slate-600 mt-0.5">
               Annual and Monthly Grievance Redressal Compliance Metrics under CPGRAMS Guidelines

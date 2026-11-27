@@ -60,7 +60,7 @@ export const LiveGovFeed = ({
               GOVERNMENT OF INDIA • CENTRAL PUBLIC GRIEVANCE REDRESS AND MONITORING SYSTEM
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 font-serif mt-0.5">
-              {lang === "en" ? "Live Government Redressal Stream & Action Taken Report (ATR) Ledger" : "लाइव सरकारी निवारण स्ट्रीम एवं कार्रवाई रिपोर्ट (एटीआर)"}
+              {lang === "en" ? "Live Government Updates" : "लाइव सरकारी शिकायत अपडेट"}
             </h2>
             <div className="text-xs text-slate-600 mt-1">
               Synchronized directly with Central Ministry Gateways: CPGRAMS (pgportal.gov.in), RTI Online (rtionline.gov.in), and MCD Portal (mcdonline.nic.in).
@@ -143,7 +143,7 @@ export const LiveGovFeed = ({
     onClick={() => setFilterState("ALL")}
     className={`px-3 py-1.5 font-semibold cursor-pointer border ${filterState === "ALL" ? "bg-[#0B3C5D] text-white border-[#0B3C5D]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
   >
-              All Dockets ({grievances.length})
+              All Complaints ({grievances.length})
             </button>
 
             <button
@@ -151,7 +151,7 @@ export const LiveGovFeed = ({
     onClick={() => setFilterState("ACTIVE")}
     className={`px-3 py-1.5 font-semibold cursor-pointer border ${filterState === "ACTIVE" ? "bg-amber-600 text-white border-amber-600" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
   >
-              Active in Field ({activeCount})
+              In Progress ({activeCount})
             </button>
 
             <button
@@ -159,7 +159,7 @@ export const LiveGovFeed = ({
     onClick={() => setFilterState("SOLVED")}
     className={`px-3 py-1.5 font-semibold cursor-pointer border ${filterState === "SOLVED" ? "bg-[#138808] text-white border-[#138808]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
   >
-              Solved & Closed ({solvedCount})
+              Solved ({solvedCount})
             </button>
 
             <button
@@ -167,7 +167,7 @@ export const LiveGovFeed = ({
     onClick={() => setFilterState("MY_DISPATCH")}
     className={`px-3 py-1.5 font-semibold cursor-pointer border ${filterState === "MY_DISPATCH" ? "bg-[#1B2A4A] text-white border-[#1B2A4A]" : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"}`}
   >
-              Portal Direct Filings ({directlyDispatchedCount})
+              Sent to Govt ({directlyDispatchedCount})
             </button>
           </div>
 

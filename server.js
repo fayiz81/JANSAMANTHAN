@@ -63,7 +63,7 @@ async function startServer() {
       if (ai) {
         try {
           const aiData = await analyzeGrievanceWithAI(ai, req.body);
-          return res.json({ success: true, source: "gemini-3.8-flash", data: aiData });
+          return res.json({ success: true, source: "gemini-4-hydrogen", data: aiData });
         } catch (err) {
           console.warn("Gemini analysis failed, using rule-based fallback:", err.message);
         }
@@ -145,7 +145,7 @@ async function startServer() {
           });
           return res.json({
             success: true,
-            source: "gemini-3.8-flash-maps-grounding",
+            source: "gemini-4-hydrogen-maps-grounding",
             ...result,
           });
         } catch (err) {
@@ -191,7 +191,7 @@ async function startServer() {
           const result = await searchGovWebWithAI(ai, prompt);
           return res.json({
             success: true,
-            source: "gemini-3.8-flash-search-grounding",
+            source: "gemini-4-hydrogen-search-grounding",
             text: result.text,
             sources: result.sources,
             webSources: result.sources,
@@ -237,7 +237,7 @@ async function startServer() {
 
       res.json({
         success: true,
-        source: ai ? "gemini-3.8-flash-gov-grounded" : "verified-government-nodal-network",
+        source: ai ? "gemini-4-hydrogen-gov-grounded" : "verified-government-nodal-network",
         lastSyncTimestamp: new Date().toISOString(),
         portalGatewayStatus: PORTAL_GATEWAY_STATUS,
         items: getVerifiedGovRecords(),
